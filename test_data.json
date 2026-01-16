@@ -1,0 +1,282 @@
+{
+  "注册接口测试数据": {
+    "说明": "POST /auth/register 接口测试数据",
+    "测试用例": [
+      {
+        "用例名称": "完整信息注册",
+        "请求方法": "POST",
+        "请求URL": "http://localhost:8080/auth/register",
+        "请求头": {
+          "Content-Type": "application/json"
+        },
+        "请求体": {
+          "phone": "13800138000",
+          "password": "123456",
+          "nickname": "张三",
+          "avatar": "https://example.com/avatar1.jpg",
+          "gender": "1",
+          "studentId": "2021001",
+          "school": "北京大学",
+          "email": "zhangsan@example.com"
+        },
+        "预期结果": {
+          "code": 1,
+          "msg": null,
+          "data": {
+            "userId": 1,
+            "phone": "13800138000",
+            "nickname": "张三",
+            "avatar": "https://example.com/avatar1.jpg",
+            "gender": 1,
+            "studentId": "2021001",
+            "school": "北京大学",
+            "createTime": "2024-01-01 10:00:00",
+            "updateTime": "2024-01-01 10:00:00"
+          }
+        }
+      },
+      {
+        "用例名称": "最小必填信息注册",
+        "请求方法": "POST",
+        "请求URL": "http://localhost:8080/auth/register",
+        "请求头": {
+          "Content-Type": "application/json"
+        },
+        "请求体": {
+          "phone": "13900139000",
+          "password": "123456",
+          "nickname": "李四"
+        },
+        "预期结果": {
+          "code": 1,
+          "msg": null,
+          "data": {
+            "userId": 2,
+            "phone": "13900139000",
+            "nickname": "李四",
+            "avatar": "https://via.placeholder.com/150",
+            "gender": 0,
+            "createTime": "2024-01-01 10:00:00",
+            "updateTime": "2024-01-01 10:00:00"
+          }
+        }
+      },
+      {
+        "用例名称": "女性用户注册",
+        "请求方法": "POST",
+        "请求URL": "http://localhost:8080/auth/register",
+        "请求头": {
+          "Content-Type": "application/json"
+        },
+        "请求体": {
+          "phone": "13700137000",
+          "password": "password123",
+          "nickname": "王五",
+          "gender": "2",
+          "studentId": "2021002",
+          "school": "清华大学"
+        },
+        "预期结果": {
+          "code": 1,
+          "msg": null,
+          "data": {
+            "userId": 3,
+            "phone": "13700137000",
+            "nickname": "王五",
+            "gender": 2,
+            "studentId": "2021002",
+            "school": "清华大学"
+          }
+        }
+      },
+      {
+        "用例名称": "未知性别用户注册",
+        "请求方法": "POST",
+        "请求URL": "http://localhost:8080/auth/register",
+        "请求头": {
+          "Content-Type": "application/json"
+        },
+        "请求体": {
+          "phone": "13600136000",
+          "password": "abc123456",
+          "nickname": "赵六",
+          "gender": "0"
+        },
+        "预期结果": {
+          "code": 1,
+          "msg": null,
+          "data": {
+            "userId": 4,
+            "phone": "13600136000",
+            "nickname": "赵六",
+            "gender": 0
+          }
+        }
+      }
+    ],
+    "错误用例": [
+      {
+        "用例名称": "手机号为空",
+        "请求体": {
+          "password": "123456",
+          "nickname": "测试用户"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "手机号不能为空",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "密码为空",
+        "请求体": {
+          "phone": "13800138000",
+          "nickname": "测试用户"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "密码不能为空",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "昵称为空",
+        "请求体": {
+          "phone": "13800138000",
+          "password": "123456"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "昵称不能为空",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "手机号格式错误",
+        "请求体": {
+          "phone": "1234567890",
+          "password": "123456",
+          "nickname": "测试用户"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "手机号格式不正确",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "密码长度不足",
+        "请求体": {
+          "phone": "13800138000",
+          "password": "12345",
+          "nickname": "测试用户"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "密码长度必须在6-20位之间",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "密码长度过长",
+        "请求体": {
+          "phone": "13800138000",
+          "password": "123456789012345678901",
+          "nickname": "测试用户"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "密码长度必须在6-20位之间",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "手机号已存在",
+        "请求体": {
+          "phone": "13800138000",
+          "password": "123456",
+          "nickname": "重复用户"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "该手机号已被注册",
+          "data": null
+        }
+      },
+      {
+        "用例名称": "性别参数错误",
+        "请求体": {
+          "phone": "13500135000",
+          "password": "123456",
+          "nickname": "测试用户",
+          "gender": "3"
+        },
+        "预期结果": {
+          "code": 0,
+          "msg": "性别参数不正确（0-未知，1-男，2-女）",
+          "data": null
+        }
+      }
+    ]
+  },
+  "查询用户列表接口测试数据": {
+    "说明": "GET /auth/query 接口测试数据",
+    "请求方法": "GET",
+    "请求URL": "http://localhost:8080/auth/query",
+    "预期结果": {
+      "code": 1,
+      "msg": null,
+      "data": [
+        {
+          "userId": 1,
+          "phone": "13800138000",
+          "nickname": "张三",
+          "avatar": "https://example.com/avatar1.jpg",
+          "gender": 1,
+          "studentId": "2021001",
+          "school": "北京大学",
+          "createTime": "2024-01-01 10:00:00",
+          "updateTime": "2024-01-01 10:00:00"
+        },
+        {
+          "userId": 2,
+          "phone": "13900139000",
+          "nickname": "李四",
+          "avatar": "https://via.placeholder.com/150",
+          "gender": 0,
+          "createTime": "2024-01-01 10:00:00",
+          "updateTime": "2024-01-01 10:00:00"
+        }
+      ]
+    }
+  },
+  "根据手机号查询用户接口测试数据": {
+    "说明": "GET /auth/query/{phone} 接口测试数据",
+    "请求方法": "GET",
+    "请求URL": "http://localhost:8080/auth/query/13800138000",
+    "预期结果": {
+      "code": 1,
+      "msg": null,
+      "data": {
+        "userId": 1,
+        "phone": "13800138000",
+        "nickname": "张三",
+        "avatar": "https://example.com/avatar1.jpg",
+        "gender": 1,
+        "studentId": "2021001",
+        "school": "北京大学",
+        "createTime": "2024-01-01 10:00:00",
+        "updateTime": "2024-01-01 10:00:00"
+      }
+    },
+    "错误用例": {
+      "请求URL": "http://localhost:8080/auth/query/99999999999",
+      "预期结果": {
+        "code": 0,
+        "msg": "用户不存在",
+        "data": null
+      }
+    }
+  }
+}
+
