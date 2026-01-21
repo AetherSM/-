@@ -22,23 +22,45 @@ public class CategoryController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 获取分类列表
+     * @param parentId 父分类ID（可选）
+     * @return 分类列表
+     */
     @GetMapping
     public Result<List<Category>> list(@RequestParam(value = "parentId", required = false) Integer parentId) {
         return Result.success(categoryService.list(parentId));
     }
 
+    /**
+     * 创建分类（仅商家）
+     * @param dto 分类信息
+     * @return 创建的分类
+     */
     @PostMapping
     public Result<Category> create(@RequestBody CategoryDTO dto) {
         ensureSeller();
         return Result.success(categoryService.create(dto));
     }
 
+    /**
+     * 更新分类信息（仅商家）
+     * @param id 分类ID
+     * @param dto 更新信息
+     * @return 更新后的分类
+     */
     @PutMapping("/{id}")
     public Result<Category> update(@PathVariable Integer id, @RequestBody CategoryDTO dto) {
         ensureSeller();
         return Result.success(categoryService.update(id, dto));
     }
 
+    /**
+     * 更新分类状态（仅商家）
+     * @param id 分类ID
+     * @param dto 包含状态信息
+     * @return 无
+     */
     @PatchMapping("/{id}/status")
     public Result<Void> updateStatus(@PathVariable Integer id, @RequestBody CategoryDTO dto) {
         ensureSeller();

@@ -18,7 +18,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    /*注册用户接口*/
+    /**
+     * 注册用户接口
+     * @param userDTO 用户注册信息
+     * @return 注册成功的用户信息
+     */
     @PostMapping("/register")
     public Result<UserEntity> register(@RequestBody UserDTO userDTO) {
         try {
@@ -31,7 +35,10 @@ public class UserController {
         }
     }
     
-    /*查询用户列表接口*/
+    /**
+     * 查询用户列表接口
+     * @return 所有用户列表
+     */
     @GetMapping("/query")
     public Result<List<UserEntity>> query() {
         try {
@@ -44,7 +51,11 @@ public class UserController {
         }
     }
     
-    /*根据手机号查询用户接口*/
+    /**
+     * 根据手机号查询用户接口
+     * @param phone 手机号
+     * @return 用户信息
+     */
     @GetMapping("/query/{phone}")
     public Result<UserEntity> queryByPhone(@PathVariable String phone) {
         try {
@@ -58,7 +69,12 @@ public class UserController {
             return Result.error("查询失败：" + e.getMessage());
         }
     }
-    /*用户登录接口*/
+
+    /**
+     * 用户登录接口
+     * @param loginDTO 登录信息（账号密码）
+     * @return 登录响应（包含Token）
+     */
     @PostMapping("/login")
     public Result<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         try {
@@ -77,7 +93,12 @@ public class UserController {
             return Result.error("登录失败：" + e.getMessage());
         }
     }
-    /*获取用户信息接口（需要JWT认证）*/
+
+    /**
+     * 获取用户信息接口（需要JWT认证）
+     * @param userId 从Token中解析出的用户ID
+     * @return 当前用户信息
+     */
     @GetMapping("/profile")
     public Result<UserEntity> profile(@RequestAttribute("userId") Long userId) {
         try {
@@ -91,7 +112,12 @@ public class UserController {
             return Result.error("获取用户信息失败：" + e.getMessage());
         }
     }
-    /*修改用户信息接口*/
+
+    /**
+     * 修改用户信息接口
+     * @param userDTO 用户更新信息
+     * @return 更新后的用户信息
+     */
     @PutMapping("/update")
     public Result<UserEntity> update(UserDTO userDTO) {
         return Result.success(new UserEntity());

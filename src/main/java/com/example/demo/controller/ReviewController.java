@@ -17,6 +17,12 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
+    /**
+     * 添加评价
+     * @param orderNo 订单号
+     * @param dto 评价信息
+     * @return 无
+     */
     @PostMapping("/orders/{orderNo}/reviews")
     public Result<Void> addReview(@PathVariable String orderNo, @RequestBody ReviewCreateDTO dto) {
         Long userId = BaseContext.getCurrentId();
@@ -27,6 +33,11 @@ public class ReviewController {
         return Result.success();
     }
 
+    /**
+     * 获取商品评价列表
+     * @param productId 商品ID
+     * @return 评价列表
+     */
     @GetMapping("/products/{productId}/reviews")
     public Result<List<Review>> listReviews(@PathVariable Long productId) {
         return Result.success(reviewService.listByProduct(productId));

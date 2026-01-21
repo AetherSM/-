@@ -19,12 +19,21 @@ public class WalletController {
     @Autowired
     private WalletService walletService;
 
+    /**
+     * 获取钱包交易记录
+     * @return 交易记录列表
+     */
     @GetMapping("/transactions")
     public Result<List<WalletTransaction>> list() {
         Long userId = requireLogin();
         return Result.success(walletService.list(userId));
     }
 
+    /**
+     * 钱包充值
+     * @param body 包含充值金额 amount
+     * @return 无
+     */
     @PostMapping("/recharge")
     public Result<Void> recharge(@RequestBody Map<String, Object> body) {
         Long userId = requireLogin();
