@@ -1,10 +1,12 @@
 package com.example.demo.interceptor;
 
+import com.example.demo.constant.JwtClaimsConstant;
 import com.example.demo.context.BaseContext;
 import com.example.demo.expection.TokenNullException;
 import com.example.demo.properties.JwtProperties;
 import com.example.demo.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -45,28 +47,35 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 
         try {
-            /*解析令牌*/
             log.info("开始解析令牌...");
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             log.info("获得到令牌信息{}", claims);
 
-            /*获取到当前用户的ID*/
-            Long adminId = Long.parseLong(claims.getId());
-            log.info("当前用户ID为{}", adminId);
-            BaseContext.setCurrentId(adminId);
-
-            /*获取到当前用户的用户名*/
-            String username = claims.getSubject();
-            log.info("当前用户用户名为{}", username);
-            BaseContext.setCurrentId(Long.valueOf(username));
-            log.info("令牌校验通过");
+            Object idObj = claims.get(JwtClaimsConstant.EMP_ID);
+            if (idObj == null) {
+                idObj = claims.get(JwtClaimsConstant.USER_ID);
+            }
+            Long userId = idObj == null ? null : Long.valueOf(idObj.toString());
+            if (userId == null) {
+                throw new JwtException("token缺少用户ID");
+            }
+            BaseContext.setCurrentId(userId);
+            request.setAttribute("userId", userId);
+            String username = (String) claims.get(JwtClaimsConstant.USERNAME);
+            request.setAttribute("username", username);
+            log.info("令牌校验通过，userId={}", userId);
             return true;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             response.setStatus(401);
-            log.info("令牌解析失败");
+            log.info("令牌解析失败: {}", e.getMessage());
             return false;
         }
 
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        BaseContext.remove();
     }
 }
 

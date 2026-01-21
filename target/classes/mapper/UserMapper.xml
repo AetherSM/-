@@ -12,44 +12,59 @@
         <result column="gender" property="gender"/>
         <result column="student_id" property="studentId"/>
         <result column="school" property="school"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
+        <result column="dormitory" property="dormitory"/>
+        <result column="balance" property="balance"/>
+        <result column="credit_score" property="creditScore"/>
+        <result column="user_type" property="userType"/>
+        <result column="status" property="status"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
     </resultMap>
     
     <!-- 注册用户 -->
     <insert id="register" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id">
-        insert into users(phone, password, nickname, avatar, gender, student_id, school, create_time, update_time)
+        insert into users(
+            phone, password, nickname, avatar, gender, student_id, school, dormitory,
+            user_type, status, create_time, update_time
+        )
         values(
-            #{phone}, 
-            #{password}, 
-            #{nickname}, 
-            #{avatar}, 
-            #{gender}, 
-            #{studentId}, 
+            #{phone},
+            #{password},
+            #{nickname},
+            #{avatar},
+            #{gender},
+            #{studentId},
             #{school},
-            #{createTime}, 
-            #{updateTime}
+            #{dormitory},
+            #{userType},
+            #{status},
+            #{createdAt},
+            #{updatedAt}
         )
     </insert>
     
     <!-- 根据手机号查询用户 -->
     <select id="findByPhone" resultMap="BaseResultMap">
-        select user_id, phone, password, nickname, avatar, gender, student_id, school, create_time, update_time
+        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, create_time, update_time
         from users
         where phone = #{phone}
     </select>
     
     <!-- 根据用户ID查询用户 -->
     <select id="findById" resultMap="BaseResultMap">
-        select user_id, phone, password, nickname, avatar, gender, student_id, school, create_time, update_time
+        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, create_time, update_time
         from users
         where user_id = #{userId}
     </select>
     
     <!-- 查询所有用户列表 -->
     <select id="findAllUsers" resultMap="BaseResultMap">
-        select user_id, phone, password, nickname, avatar, gender, student_id, school, create_time, update_time
+        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, create_time, update_time
         from users
         order by create_time desc
     </select>
+
+    <update id="updateBalance">
+        update users set balance = #{newBalance}, update_time = now() where user_id = #{userId}
+    </update>
 </mapper>

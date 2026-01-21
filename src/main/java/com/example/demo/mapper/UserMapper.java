@@ -28,4 +28,9 @@ public interface UserMapper {
      * 查询所有用户列表
      */
     List<UserEntity> findAllUsers();
+
+    /**
+     * 更新余额
+     */
+    void updateBalance(Long userId, java.math.BigDecimal newBalance);
 }

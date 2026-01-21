@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -70,20 +71,35 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.hasText(userDTO.getAvatar())) {
             userDTO.setAvatar("https://via.placeholder.com/150"); // 默认头像
         }
-        if (!StringUtils.hasText(userDTO.getGender())) {
-            userDTO.setGender("0"); // 默认未知（0-未知，1-男，2-女）
+        if (userDTO.getGender() == null) {
+            userDTO.setGender(0); // 默认未知（0-未知，1-男，2-女）
         }
         
         // 验证gender值是否有效
-        String gender = userDTO.getGender();
-        if (!gender.matches("^[0-2]$")) {
+        Integer gender = userDTO.getGender();
+        if (gender < 0 || gender > 2) {
             throw new IllegalArgumentException("性别参数不正确（0-未知，1-男，2-女）");
         }
 
-        // 5. 设置创建时间和更新时间
+        // 5. 设置其他默认值
         LocalDateTime now = LocalDateTime.now();
-        userDTO.setCreateTime(now);
-        userDTO.setUpdateTime(now);
+        userDTO.setCreatedAt(now);
+        userDTO.setUpdatedAt(now);
+        if (userDTO.getDormitory() == null) {
+            userDTO.setDormitory("");
+        }
+        if (userDTO.getUserType() == null) {
+            userDTO.setUserType(1);
+        }
+        if (userDTO.getStatus() == null) {
+            userDTO.setStatus(1);
+        }
+        if (userDTO.getBalance() == null) {
+            userDTO.setBalance(BigDecimal.ZERO);
+        }
+        if (userDTO.getCreditScore() == null) {
+            userDTO.setCreditScore(100);
+        }
 
         // 6. 插入数据库
         userMapper.register(userDTO);
@@ -142,8 +158,13 @@ public class UserServiceImpl implements UserService {
         userInfo.setGender(user.getGender());
         userInfo.setStudentId(user.getStudentId());
         userInfo.setSchool(user.getSchool());
-        userInfo.setCreateTime(user.getCreateTime());
-        userInfo.setUpdateTime(user.getUpdateTime());
+        userInfo.setDormitory(user.getDormitory());
+        userInfo.setBalance(user.getBalance());
+        userInfo.setCreditScore(user.getCreditScore());
+        userInfo.setUserType(user.getUserType());
+        userInfo.setStatus(user.getStatus());
+        userInfo.setCreatedAt(user.getCreatedAt());
+        userInfo.setUpdatedAt(user.getUpdatedAt());
         // 不设置密码
 
         // 6. 返回登录响应
