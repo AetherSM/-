@@ -1,70 +1,72 @@
 package com.example.demo.interceptor;
 
-import com.example.demo.util.JwtUtil;
+import com.example.demo.context.BaseContext;
+import com.example.demo.expection.TokenNullException;
+import com.example.demo.properties.JwtProperties;
+import com.example.demo.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * JWT拦截器
  */
 @Component
+@Slf4j
 public class JwtInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtProperties jwtProperties;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 跨域预检请求直接放行
-        if ("OPTIONS".equals(request.getMethod())) {
+        /*获取到当前线程的id*/
+        long id = Thread.currentThread().getId();
+        log.info("当前线程id为{}", id);
+
+        //HandlerMethod是封装控制器中具体的方法信息,这里就是检查是不是Controller方法
+        if (!(handler instanceof HandlerMethod)) {
+            //当前拦截到的不是动态方法，直接放行
             return true;
         }
 
-        // 获取token
-        String token = getTokenFromRequest(request);
+        /*获得请求头中的token信息*/
+        String token = request.getHeader(jwtProperties.getAdminTokenName());
+        log.info("请求令牌: {}", token);
+        /*检查是否携带令牌*/
+        if (token == null || token.isEmpty()) {
+            log.info("携带令牌为空");
+            throw new TokenNullException("携带令牌为空");
+        }
 
-        // token为空
-        if (!StringUtils.hasText(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":0,\"msg\":\"未登录或token已过期\",\"data\":null}");
+        try {
+            /*解析令牌*/
+            log.info("开始解析令牌...");
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
+            log.info("获得到令牌信息{}", claims);
+
+            /*获取到当前用户的ID*/
+            Long adminId = Long.parseLong(claims.getId());
+            log.info("当前用户ID为{}", adminId);
+            BaseContext.setCurrentId(adminId);
+
+            /*获取到当前用户的用户名*/
+            String username = claims.getSubject();
+            log.info("当前用户用户名为{}", username);
+            BaseContext.setCurrentId(Long.valueOf(username));
+            log.info("令牌校验通过");
+            return true;
+        } catch (NumberFormatException e) {
+            response.setStatus(401);
+            log.info("令牌解析失败");
             return false;
         }
 
-        // 验证token
-        if (!jwtUtil.validateToken(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":0,\"msg\":\"token无效或已过期\",\"data\":null}");
-            return false;
-        }
-
-        // 将用户信息存入request，方便后续使用
-        Long userId = jwtUtil.getUserIdFromToken(token);
-        String phone = jwtUtil.getPhoneFromToken(token);
-        request.setAttribute("userId", userId);
-        request.setAttribute("phone", phone);
-
-        return true;
-    }
-
-    /**
-     * 从请求中获取token
-     */
-    private String getTokenFromRequest(HttpServletRequest request) {
-        // 先从Header中获取
-        String token = request.getHeader("Authorization");
-        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            return token.substring(7);
-        }
-
-        // 如果Header中没有，尝试从参数中获取
-        token = request.getParameter("token");
-        return token;
     }
 }
 

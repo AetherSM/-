@@ -19,12 +19,17 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
-# JWT配置
-jwt:
-  secret: mySecretKey123456789012345678901234567890  # JWT密钥（至少32位）
-  expiration: 86400000  # token过期时间（毫秒），默认24小时
 
    #日志级别
 logging:
   level:
     com.example.demo: DEBUG
+    # JWT配置
+jwt:
+  admin:
+        # 使用至少32字符的密钥
+    admin-secret-key: PaQi404Notfound_key_32_characters_long_xxxx
+        # 设置jwt过期时间
+    admin-ttl: 7200000
+        # 设置前端传递过来的令牌名称
+    admin-token-name: token

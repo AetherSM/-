@@ -1,26 +1,33 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constant.JwtClaimsConstant;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.pojo.dto.LoginDTO;
 import com.example.demo.pojo.dto.LoginResponseDTO;
 import com.example.demo.pojo.dto.UserDTO;
 import com.example.demo.pojo.entity.UserEntity;
+import com.example.demo.properties.JwtProperties;
 import com.example.demo.service.UserService;
-import com.example.demo.util.JwtUtil;
-import com.example.demo.util.MD5Util;
+import com.example.demo.utils.JwtUtil;
+import com.example.demo.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private JwtProperties jwtProperties;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -113,8 +120,15 @@ public class UserServiceImpl implements UserService {
 
         // 4. 生成JWT token
         String token;
+        Map<String, Object> claims = new HashMap<>();
+        /*把员工的id作为值,empId作为键,存储到jwt的声明中(claims)*/
+        claims.put(JwtClaimsConstant.EMP_ID, user.getUserId());
+        claims.put(JwtClaimsConstant.USERNAME,user.getNickname());
         try {
-            token = jwtUtil.generateToken(user.getUserId(), user.getPhone());
+             token = JwtUtil.createJWT(
+                    jwtProperties.getAdminSecretKey(),
+                    jwtProperties.getAdminTtl(),
+                    claims);
         } catch (Exception e) {
             throw new RuntimeException("生成token失败：" + e.getMessage(), e);
         }
