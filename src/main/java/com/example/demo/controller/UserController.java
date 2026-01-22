@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -130,6 +131,12 @@ public class UserController {
     @Operation(summary = "修改用户信息", description = "更新当前用户的个人信息")
     public Result<UserEntity> update(UserDTO userDTO) {
         return Result.success(new UserEntity());
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "退出登录", description = "退出登录并清理客户端令牌")
+    public Result<String> logout(HttpServletRequest request) {
+        return Result.success("已退出");
     }
 
 }

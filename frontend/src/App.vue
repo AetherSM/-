@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import http from './services/http'
 const route = useRoute()
+const router = useRouter()
 const navAll = [
   { path: '/errands', label: '跑腿广场', roles: [1,2,3] },
   { path: '/errands/create', label: '发布跑腿', roles: [1] },           // 普通用户可发布
@@ -41,6 +42,19 @@ const refreshAuth = async () => {
 }
 onMounted(refreshAuth)
 watch(() => route.path, refreshAuth)
+
+const logout = async () => {
+  try { await http.post('/auth/logout') } catch (e) {}
+  localStorage.removeItem('token')
+  localStorage.removeItem('userId')
+  localStorage.removeItem('nickname')
+  localStorage.removeItem('userType')
+  loggedIn.value = false
+  nickname.value = ''
+  userType.value = null
+  nav.value = navAll
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -58,6 +72,7 @@ watch(() => route.path, refreshAuth)
         <div v-else class="user">
           <div class="avatar">{{ nickname?.[0] || 'U' }}</div>
           <div class="name">{{ nickname || '已登录' }}</div>
+          <button class="logout" @click="logout">退出</button>
         </div>
       </div>
     </aside>
@@ -82,5 +97,6 @@ watch(() => route.path, refreshAuth)
 .user{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
 .avatar{width:28px;height:28px;border-radius:50%;background:#42b883;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
 .name{font-weight:600}
+.logout{margin-left:auto;border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
 .content{flex:1;overflow:auto;padding:18px;background:#f5f7fb}
 </style>

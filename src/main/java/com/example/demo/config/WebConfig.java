@@ -26,6 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/auth/register",  // 排除注册接口
                         "/auth/login",     // 排除登录接口
+                        "/auth/logout",    // 排除退出接口
                         "/auth/query",     // 排除查询接口
                         "/auth/query/**",
                         "/doc.html",                // Knife4j 接口文档
@@ -50,4 +51,3 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 }
-
