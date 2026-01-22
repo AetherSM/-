@@ -6,6 +6,8 @@ import com.example.demo.pojo.dto.UserDTO;
 import com.example.demo.pojo.entity.UserEntity;
 import com.example.demo.pojo.result.Result;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "用户认证", description = "用户注册、登录及信息管理接口")
 public class UserController {
 
     @Autowired
@@ -24,6 +27,7 @@ public class UserController {
      * @return 注册成功的用户信息
      */
     @PostMapping("/register")
+    @Operation(summary = "用户注册", description = "新用户注册")
     public Result<UserEntity> register(@RequestBody UserDTO userDTO) {
         try {
             UserEntity user = userService.register(userDTO);
@@ -40,6 +44,7 @@ public class UserController {
      * @return 所有用户列表
      */
     @GetMapping("/query")
+    @Operation(summary = "查询用户列表", description = "获取所有用户列表（不含密码）")
     public Result<List<UserEntity>> query() {
         try {
             List<UserEntity> users = userService.findAllUsers();
@@ -57,6 +62,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/query/{phone}")
+    @Operation(summary = "根据手机号查询", description = "根据手机号获取用户信息")
     public Result<UserEntity> queryByPhone(@PathVariable String phone) {
         try {
             UserEntity user = userService.findByPhone(phone);
@@ -76,6 +82,7 @@ public class UserController {
      * @return 登录响应（包含Token）
      */
     @PostMapping("/login")
+    @Operation(summary = "用户登录", description = "用户登录并获取Token")
     public Result<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         try {
             LoginResponseDTO response = userService.login(loginDTO);
@@ -100,6 +107,7 @@ public class UserController {
      * @return 当前用户信息
      */
     @GetMapping("/profile")
+    @Operation(summary = "获取个人信息", description = "获取当前登录用户的详细信息")
     public Result<UserEntity> profile(@RequestAttribute("userId") Long userId) {
         try {
             UserEntity user = userService.findById(userId);
@@ -119,6 +127,7 @@ public class UserController {
      * @return 更新后的用户信息
      */
     @PutMapping("/update")
+    @Operation(summary = "修改用户信息", description = "更新当前用户的个人信息")
     public Result<UserEntity> update(UserDTO userDTO) {
         return Result.success(new UserEntity());
     }

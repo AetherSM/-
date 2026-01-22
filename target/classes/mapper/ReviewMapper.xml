@@ -14,11 +14,11 @@
         <result column="content" property="content"/>
         <result column="images" property="images"/>
         <result column="is_anonymous" property="isAnonymous"/>
-        <result column="created_at" property="createdAt"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="reviewId" keyColumn="review_id">
-        insert into reviews(order_id, order_type, reviewer_id, reviewee_id, rating, content, images, is_anonymous, created_at)
+        insert into reviews(order_id, order_type, reviewer_id, reviewee_id, rating, content, images, is_anonymous, create_time)
         values(#{orderId}, #{orderType}, #{reviewerId}, #{revieweeId}, #{rating}, #{content}, #{images}, #{isAnonymous}, now())
     </insert>
 
@@ -28,7 +28,7 @@
         join order_items oi on r.order_id = oi.order_id
         where oi.product_id = #{productId}
           and r.order_type = 1
-        order by r.created_at desc
+        order by r.create_time desc
     </select>
 
 </mapper>

@@ -13,12 +13,12 @@
         <result column="building" property="building"/>
         <result column="room" property="room"/>
         <result column="is_default" property="isDefault"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_at" property="updatedAt"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <select id="listByUser" resultMap="BaseResultMap">
-        select * from addresses where user_id = #{userId} order by is_default desc, created_at desc
+        select * from addresses where user_id = #{userId} order by is_default desc, create_time desc
     </select>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -26,7 +26,7 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="addressId" keyColumn="address_id">
-        insert into addresses(user_id, contact_name, contact_phone, address, building, room, is_default, created_at, updated_at)
+        insert into addresses(user_id, contact_name, contact_phone, address, building, room, is_default, create_time, update_time)
         values(#{userId}, #{contactName}, #{contactPhone}, #{address}, #{building}, #{room}, #{isDefault}, now(), now())
     </insert>
 
@@ -38,7 +38,7 @@
             building = #{building},
             room = #{room},
             is_default = #{isDefault},
-            updated_at = now()
+            update_time = now()
         where address_id = #{addressId}
     </update>
 

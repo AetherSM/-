@@ -13,16 +13,16 @@
         <result column="balance_after" property="balanceAfter"/>
         <result column="related_order_no" property="relatedOrderNo"/>
         <result column="description" property="description"/>
-        <result column="created_at" property="createdAt"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="transactionId" keyColumn="transaction_id">
-        insert into wallet_transactions(user_id, transaction_type, amount, balance_before, balance_after, related_order_no, description, created_at)
+        insert into wallet_transactions(user_id, transaction_type, amount, balance_before, balance_after, related_order_no, description, create_time)
         values(#{userId}, #{transactionType}, #{amount}, #{balanceBefore}, #{balanceAfter}, #{relatedOrderNo}, #{description}, now())
     </insert>
 
     <select id="listByUser" resultMap="BaseResultMap">
-        select * from wallet_transactions where user_id = #{userId} order by created_at desc
+        select * from wallet_transactions where user_id = #{userId} order by create_time desc
     </select>
 
 </mapper>

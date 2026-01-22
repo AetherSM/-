@@ -17,8 +17,8 @@
         <result column="credit_score" property="creditScore"/>
         <result column="user_type" property="userType"/>
         <result column="status" property="status"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_at" property="updatedAt"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
     
     <!-- 注册用户 -->
@@ -38,33 +38,33 @@
             #{dormitory},
             #{userType},
             #{status},
-            #{createdAt},
-            #{updatedAt}
+            #{createTime},
+            #{updateTime}
         )
     </insert>
     
     <!-- 根据手机号查询用户 -->
     <select id="findByPhone" resultMap="BaseResultMap">
-        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, created_at, updated_at
+        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, create_time, update_time
         from users
         where phone = #{phone}
     </select>
     
     <!-- 根据用户ID查询用户 -->
     <select id="findById" resultMap="BaseResultMap">
-        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, created_at, updated_at
+        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, create_time, update_time
         from users
         where user_id = #{userId}
     </select>
     
     <!-- 查询所有用户列表 -->
     <select id="findAllUsers" resultMap="BaseResultMap">
-        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, created_at, updated_at
+        select user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status, create_time, update_time
         from users
-        order by created_at desc
+        order by create_time desc
     </select>
 
     <update id="updateBalance">
-        update users set balance = #{newBalance}, updated_at = now() where user_id = #{userId}
+        update users set balance = #{newBalance}, update_time = now() where user_id = #{userId}
     </update>
 </mapper>

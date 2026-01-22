@@ -7,6 +7,9 @@ import com.example.demo.pojo.entity.UserEntity;
 import com.example.demo.pojo.result.Result;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@Tag(name = "商品管理", description = "商品信息查询与管理接口")
 public class ProductController {
 
     @Autowired
@@ -35,14 +39,15 @@ public class ProductController {
      * @return 商品列表
      */
     @GetMapping
-    public Result<List<Product>> list(@RequestParam(value = "categoryId", required = false) Integer categoryId,
-                                      @RequestParam(value = "keyword", required = false) String keyword,
-                                      @RequestParam(value = "minPrice", required = false) String minPrice,
-                                      @RequestParam(value = "maxPrice", required = false) String maxPrice,
-                                      @RequestParam(value = "status", required = false) Integer status,
-                                      @RequestParam(value = "sellerId", required = false) Long sellerId,
-                                      @RequestParam(value = "sortBy", required = false) String sortBy,
-                                      @RequestParam(value = "order", required = false) String order) {
+    @Operation(summary = "搜索商品", description = "根据条件搜索商品列表")
+    public Result<List<Product>> list(@Parameter(description = "分类ID") @RequestParam(value = "categoryId", required = false) Integer categoryId,
+                                      @Parameter(description = "搜索关键词") @RequestParam(value = "keyword", required = false) String keyword,
+                                      @Parameter(description = "最低价格") @RequestParam(value = "minPrice", required = false) String minPrice,
+                                      @Parameter(description = "最高价格") @RequestParam(value = "maxPrice", required = false) String maxPrice,
+                                      @Parameter(description = "商品状态") @RequestParam(value = "status", required = false) Integer status,
+                                      @Parameter(description = "商家ID") @RequestParam(value = "sellerId", required = false) Long sellerId,
+                                      @Parameter(description = "排序字段") @RequestParam(value = "sortBy", required = false) String sortBy,
+                                      @Parameter(description = "排序方式: asc/desc") @RequestParam(value = "order", required = false) String order) {
         return Result.success(productService.search(categoryId, keyword, minPrice, maxPrice, status, sellerId, sortBy, order));
     }
 
@@ -52,6 +57,7 @@ public class ProductController {
      * @return 商品详情
      */
     @GetMapping("/{id}")
+    @Operation(summary = "商品详情", description = "根据ID获取商品详细信息")
     public Result<Product> detail(@PathVariable Long id) {
         return Result.success(productService.findById(id));
     }
@@ -62,6 +68,7 @@ public class ProductController {
      * @return 创建的商品
      */
     @PostMapping
+    @Operation(summary = "创建商品", description = "商家发布新商品")
     public Result<Product> create(@RequestBody ProductCreateDTO dto) {
         Long sellerId = requireSeller();
         return Result.success(productService.create(sellerId, dto));
@@ -74,6 +81,7 @@ public class ProductController {
      * @return 更新后的商品
      */
     @PutMapping("/{id}")
+    @Operation(summary = "更新商品", description = "商家更新商品信息")
     public Result<Product> update(@PathVariable Long id, @RequestBody ProductCreateDTO dto) {
         Long sellerId = requireSeller();
         return Result.success(productService.update(id, sellerId, dto));
@@ -86,6 +94,7 @@ public class ProductController {
      * @return 无
      */
     @PatchMapping("/{id}/status")
+    @Operation(summary = "更改商品状态", description = "商家上架或下架商品")
     public Result<Void> changeStatus(@PathVariable Long id, @RequestBody ProductCreateDTO dto) {
         Long sellerId = requireSeller();
         productService.updateStatus(id, dto.getStatus(), sellerId);
@@ -101,9 +110,10 @@ public class ProductController {
      * @return 无
      */
     @PatchMapping("/{id}/stock")
+    @Operation(summary = "调整库存", description = "商家调整商品库存")
     public Result<Void> adjustStock(@PathVariable Long id, @RequestBody ProductCreateDTO dto,
-                                    @RequestParam(value = "delta", required = false) Integer delta,
-                                    @RequestParam(value = "stock", required = false) Integer stock) {
+                                    @Parameter(description = "库存增量（正增负减）") @RequestParam(value = "delta", required = false) Integer delta,
+                                    @Parameter(description = "直接设置库存值") @RequestParam(value = "stock", required = false) Integer stock) {
         Long sellerId = requireSeller();
         productService.adjustStock(id, stock, delta, sellerId);
         return Result.success();

@@ -17,15 +17,15 @@
         <result column="main_image" property="mainImage"/>
         <result column="images" property="images"/>
         <result column="status" property="status"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_at" property="updatedAt"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="productId" keyColumn="product_id">
         insert into products(
             seller_id, category_id, product_name, description,
             price, original_price, stock, sales_count,
-            main_image, images, status, created_at, updated_at
+            main_image, images, status, create_time, update_time
         ) values (
             #{sellerId}, #{categoryId}, #{productName}, #{description},
             #{price}, #{originalPrice}, #{stock}, #{salesCount},
@@ -44,12 +44,12 @@
             main_image = #{mainImage},
             images = #{images},
             status = #{status},
-            updated_at = now()
+            update_time = now()
         where product_id = #{productId}
     </update>
 
     <update id="updateStatus">
-        update products set status = #{status}, updated_at = now() where product_id = #{productId}
+        update products set status = #{status}, update_time = now() where product_id = #{productId}
     </update>
 
     <update id="updateStock">
@@ -61,7 +61,7 @@
             <if test="stock != null">
                 stock = #{stock},
             </if>
-            updated_at = now()
+            update_time = now()
         </set>
         where product_id = #{productId}
     </update>
@@ -92,7 +92,7 @@
                 <choose>
                     <when test="sortBy == 'price'"> price </when>
                     <when test="sortBy == 'sales'"> sales_count </when>
-                    <otherwise> created_at </otherwise>
+                    <otherwise> create_time </otherwise>
                 </choose>
                 <choose>
                     <when test="order != null and order.toLowerCase() == 'asc'"> asc </when>
@@ -100,7 +100,7 @@
                 </choose>
             </when>
             <otherwise>
-                order by created_at desc
+                order by create_time desc
             </otherwise>
         </choose>
     </select>

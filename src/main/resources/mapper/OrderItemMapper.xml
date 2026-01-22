@@ -13,11 +13,11 @@
         <result column="price" property="price"/>
         <result column="quantity" property="quantity"/>
         <result column="subtotal" property="subtotal"/>
-        <result column="created_at" property="createdAt"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <insert id="batchInsert">
-        insert into order_items(order_id, product_id, product_name, product_image, price, quantity, subtotal, created_at)
+        insert into order_items(order_id, product_id, product_name, product_image, price, quantity, subtotal, create_time)
         values
         <foreach collection="items" item="item" separator=",">
             (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.productImage},

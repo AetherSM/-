@@ -43,7 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setContent(dto.getContent());
         review.setImages(writeImages(dto.getImages()));
         review.setIsAnonymous(dto.getIsAnonymous() == null ? 0 : dto.getIsAnonymous());
-        review.setCreatedAt(LocalDateTime.now());
+        review.setCreateTime(LocalDateTime.now());
         reviewMapper.insert(review);
     }
 

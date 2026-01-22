@@ -1,0 +1,46 @@
+package com.example.demo.pojo.entity;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@Schema(description = "优惠券实体")
+public class Coupon {
+    @Schema(description = "优惠券ID")
+    private Long couponId;
+    
+    @Schema(description = "优惠券名称")
+    private String name;
+    
+    @Schema(description = "类型: 1-满减, 2-折扣")
+    private Integer type; 
+    
+    @Schema(description = "面值/折扣率")
+    private BigDecimal value;
+    
+    @Schema(description = "最低消费金额")
+    private BigDecimal minSpend;
+    
+    @Schema(description = "开始时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime startTime;
+    
+    @Schema(description = "结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
+    
+    @Schema(description = "状态: 0-无效, 1-有效")
+    private Integer status; 
+    
+    @Schema(description = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
+    
+    @Schema(description = "更新时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
+}

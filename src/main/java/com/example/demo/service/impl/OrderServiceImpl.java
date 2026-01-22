@@ -108,8 +108,8 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setOrderStatus(1);
         order.setRemark(dto.getRemark());
-        order.setCreatedAt(LocalDateTime.now());
-        order.setUpdatedAt(LocalDateTime.now());
+        order.setCreateTime(LocalDateTime.now());
+        order.setUpdateTime(LocalDateTime.now());
 
         productOrderMapper.insert(order);
 

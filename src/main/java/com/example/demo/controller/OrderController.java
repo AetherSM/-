@@ -8,6 +8,9 @@ import com.example.demo.pojo.entity.UserEntity;
 import com.example.demo.pojo.result.Result;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
+@Tag(name = "商品订单", description = "商品订单创建与管理接口")
 public class OrderController {
 
     @Autowired
@@ -31,6 +35,7 @@ public class OrderController {
      * @return 创建的订单
      */
     @PostMapping
+    @Operation(summary = "创建订单", description = "创建新的商品订单")
     public Result<ProductOrder> create(@RequestBody OrderCreateDTO dto) {
         Long userId = requireLogin();
         return Result.success(orderService.createOrder(userId, dto));
@@ -42,6 +47,7 @@ public class OrderController {
      * @return 无
      */
     @PostMapping("/{orderNo}/pay")
+    @Operation(summary = "支付订单", description = "模拟支付订单")
     public Result<Void> pay(@PathVariable String orderNo) {
         Long userId = requireLogin();
         orderService.pay(orderNo, userId);
@@ -55,6 +61,7 @@ public class OrderController {
      * @return 无
      */
     @PostMapping("/{orderNo}/cancel")
+    @Operation(summary = "取消订单", description = "取消未完成的订单")
     public Result<Void> cancel(@PathVariable String orderNo, @RequestBody(required = false) Map<String, String> body) {
         Long userId = requireLogin();
         String reason = body == null ? null : body.get("cancelReason");
@@ -68,6 +75,7 @@ public class OrderController {
      * @return 无
      */
     @PostMapping("/{orderNo}/ship")
+    @Operation(summary = "订单发货", description = "商家对订单进行发货操作")
     public Result<Void> ship(@PathVariable String orderNo) {
         Long sellerId = requireSeller();
         orderService.ship(orderNo, sellerId);
@@ -80,6 +88,7 @@ public class OrderController {
      * @return 无
      */
     @PostMapping("/{orderNo}/confirm")
+    @Operation(summary = "确认收货", description = "用户确认收到商品")
     public Result<Void> confirm(@PathVariable String orderNo) {
         Long userId = requireLogin();
         orderService.confirm(orderNo, userId);
@@ -92,7 +101,8 @@ public class OrderController {
      * @return 订单列表
      */
     @GetMapping
-    public Result<List<ProductOrder>> listMy(@RequestParam(value = "status", required = false) Integer status) {
+    @Operation(summary = "我的订单", description = "获取当前用户的订单列表")
+    public Result<List<ProductOrder>> listMy(@Parameter(description = "订单状态: 1-待支付, 2-待发货, 3-待收货, 4-已完成, 5-已取消") @RequestParam(value = "status", required = false) Integer status) {
         Long userId = requireLogin();
         return Result.success(orderService.listUserOrders(userId, status));
     }
@@ -103,7 +113,8 @@ public class OrderController {
      * @return 订单列表
      */
     @GetMapping("/seller")
-    public Result<List<ProductOrder>> listSeller(@RequestParam(value = "status", required = false) Integer status) {
+    @Operation(summary = "商家订单", description = "获取商家的订单列表（仅商家）")
+    public Result<List<ProductOrder>> listSeller(@Parameter(description = "订单状态") @RequestParam(value = "status", required = false) Integer status) {
         Long sellerId = requireSeller();
         return Result.success(orderService.listSellerOrders(sellerId, status));
     }
@@ -114,6 +125,7 @@ public class OrderController {
      * @return 订单详情（包含订单信息和订单项）
      */
     @GetMapping("/{orderNo}")
+    @Operation(summary = "订单详情", description = "获取订单的详细信息及商品项")
     public Result<Map<String, Object>> detail(@PathVariable String orderNo) {
         ProductOrder order = orderService.findByOrderNo(orderNo);
         if (order == null) {

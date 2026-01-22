@@ -27,8 +27,8 @@ public class AddressServiceImpl implements AddressService {
         validate(dto);
         Address addr = toEntity(dto);
         addr.setUserId(userId);
-        addr.setCreatedAt(LocalDateTime.now());
-        addr.setUpdatedAt(LocalDateTime.now());
+        addr.setCreateTime(LocalDateTime.now());
+        addr.setUpdateTime(LocalDateTime.now());
         if (addr.getIsDefault() == null) {
             addr.setIsDefault(0);
         }
@@ -52,7 +52,7 @@ public class AddressServiceImpl implements AddressService {
         existing.setBuilding(dto.getBuilding());
         existing.setRoom(dto.getRoom());
         existing.setIsDefault(dto.getIsDefault());
-        existing.setUpdatedAt(LocalDateTime.now());
+        existing.setUpdateTime(LocalDateTime.now());
         if (dto.getIsDefault() != null && dto.getIsDefault() == 1) {
             addressMapper.clearDefault(userId);
         }

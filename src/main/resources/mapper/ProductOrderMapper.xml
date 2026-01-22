@@ -19,14 +19,14 @@
         <result column="confirm_time" property="confirmTime"/>
         <result column="cancel_reason" property="cancelReason"/>
         <result column="remark" property="remark"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_at" property="updatedAt"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="orderId" keyColumn="order_id">
         insert into product_orders(
             order_no, user_id, seller_id, total_amount, delivery_address,
-            contact_name, contact_phone, order_status, remark, created_at, updated_at
+            contact_name, contact_phone, order_status, remark, create_time, update_time
         ) values(
             #{orderNo}, #{userId}, #{sellerId}, #{totalAmount}, #{deliveryAddress},
             #{contactName}, #{contactPhone}, #{orderStatus}, #{remark}, now(), now()
@@ -37,7 +37,7 @@
         update product_orders
         set order_status = #{orderStatus},
             cancel_reason = #{cancelReason},
-            updated_at = now()
+            update_time = now()
         where order_no = #{orderNo}
     </update>
 
@@ -45,7 +45,7 @@
         update product_orders
         set order_status = 2,
             pay_time = now(),
-            updated_at = now()
+            update_time = now()
         where order_no = #{orderNo} and order_status = 1
     </update>
 
@@ -53,7 +53,7 @@
         update product_orders
         set order_status = 3,
             ship_time = now(),
-            updated_at = now()
+            update_time = now()
         where order_no = #{orderNo} and order_status = 2
     </update>
 
@@ -61,7 +61,7 @@
         update product_orders
         set order_status = 4,
             confirm_time = now(),
-            updated_at = now()
+            update_time = now()
         where order_no = #{orderNo} and order_status = 3
     </update>
 
@@ -75,7 +75,7 @@
             user_id = #{userId}
             <if test="status != null"> and order_status = #{status} </if>
         </where>
-        order by created_at desc
+        order by create_time desc
     </select>
 
     <select id="listBySeller" resultMap="BaseResultMap">
@@ -84,7 +84,7 @@
             seller_id = #{sellerId}
             <if test="status != null"> and order_status = #{status} </if>
         </where>
-        order by created_at desc
+        order by create_time desc
     </select>
 
 </mapper>

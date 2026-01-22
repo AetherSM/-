@@ -83,8 +83,8 @@ public class UserServiceImpl implements UserService {
 
         // 5. 设置其他默认值
         LocalDateTime now = LocalDateTime.now();
-        userDTO.setCreatedAt(now);
-        userDTO.setUpdatedAt(now);
+        userDTO.setCreateTime(now);
+        userDTO.setUpdateTime(now);
         if (userDTO.getDormitory() == null) {
             userDTO.setDormitory("");
         }
@@ -163,8 +163,8 @@ public class UserServiceImpl implements UserService {
         userInfo.setCreditScore(user.getCreditScore());
         userInfo.setUserType(user.getUserType());
         userInfo.setStatus(user.getStatus());
-        userInfo.setCreatedAt(user.getCreatedAt());
-        userInfo.setUpdatedAt(user.getUpdatedAt());
+        userInfo.setCreateTime(user.getCreateTime());
+        userInfo.setUpdateTime(user.getUpdateTime());
         // 不设置密码
 
         // 6. 返回登录响应
