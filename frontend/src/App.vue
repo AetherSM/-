@@ -9,6 +9,8 @@ const navAll = [
   { path: '/errands/create', label: '发布跑腿', roles: [1] },           // 普通用户可发布
   { path: '/orders', label: '我的订单', roles: [1,2,3] },
   { path: '/wallet', label: '钱包', roles: [1,2,3] },
+  { path: '/addresses', label: '地址管理', roles: [1,2,3] },
+  { path: '/coupons', label: '优惠券', roles: [1,2,3] },
   { path: '/shop', label: '商品商城', roles: [1,2,3] },
   { path: '/shop/create', label: '发布商品', roles: [3] }               // 仅商家
 ]

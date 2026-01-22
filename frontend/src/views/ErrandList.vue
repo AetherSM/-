@@ -4,6 +4,8 @@ import http from '../services/http'
 const list = ref([])
 const loading = ref(false)
 const error = ref('')
+const userType = Number(localStorage.getItem('userType') || 0)
+const userId = Number(localStorage.getItem('userId') || 0)
 const load = async () => {
   loading.value = true
   error.value = ''
@@ -21,6 +23,13 @@ const load = async () => {
   }
 }
 onMounted(load)
+const take = async (orderNo) => {
+  try {
+    const { data } = await http.post('/api/errands/take', null, { params: { orderNo, runnerId: userId } })
+    if (data && data.code === 1) await load()
+    else error.value = data?.msg || '接单失败'
+  } catch (e) { error.value = '请求失败' }
+}
 </script>
 
 <template>
@@ -35,6 +44,9 @@ onMounted(load)
         <div>赏金 ¥{{ item.reward }}</div>
         <div>联系人 {{ item.contact_name || item.contactName }}</div>
       </div>
+      <div class="row">
+        <button v-if="userType===2" class="btn" @click="take(item.orderNo)">接单</button>
+      </div>
     </div>
     <div v-if="!loading && list.length===0" class="empty">暂无数据</div>
     <div v-if="error" class="error">{{ error }}</div>
@@ -48,6 +60,7 @@ onMounted(load)
 .title{font-weight:600}
 .status{color:#42b883}
 .desc{color:#666;font-size:14px}
+.btn{padding:8px 12px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
 .empty{padding:24px;text-align:center;color:#999}
 .error{padding:12px;color:#d33}
 </style>
