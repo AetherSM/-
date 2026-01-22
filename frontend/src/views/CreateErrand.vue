@@ -93,9 +93,9 @@ const submit = async () => {
 </template>
 
 <style scoped>
-.form{max-width:520px;margin:0 auto;padding:16px;border:1px solid #eee;border-radius:8px;background:#fff}
+.form{width:100%;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-.row input,.row textarea,.row select{padding:10px;border:1px solid #ddd;border-radius:6px}
-.btn{padding:10px 16px;border:none;border-radius:6px;background:#42b883;color:#fff;cursor:pointer}
+.row input,.row textarea,.row select{padding:10px;border:1px solid #e5e7eb;border-radius:10px}
+.btn{padding:10px 16px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
 .msg{margin-top:12px;color:#42b883}
 </style>

@@ -16,6 +16,9 @@ const submit = async () => {
       localStorage.setItem('token', data.data.token)
       localStorage.setItem('userId', String(data.data.user.userId))
       localStorage.setItem('nickname', String(data.data.user.nickname || ''))
+      if (data.data.user.userType !== undefined && data.data.user.userType !== null) {
+        localStorage.setItem('userType', String(data.data.user.userType))
+      }
       router.push('/errands')
     } else {
       message.value = data && data.msg ? data.msg : '登录失败'
@@ -50,12 +53,12 @@ const submit = async () => {
   </template>
 
 <style scoped>
-.card{max-width:360px;margin:40px auto;padding:24px;border:1px solid #eee;border-radius:8px;background:#fff}
+.card{width:100%;margin:0;padding:24px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .field input{padding:10px;border:1px solid #ddd;border-radius:6px}
-.btn{width:100%;padding:10px;border:none;border-radius:6px;background:#42b883;color:#fff;cursor:pointer}
+.btn{width:100%;padding:10px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
 .msg{margin-top:12px;color:#d33}
-.tip{text-align:center;margin-top:12px;color:#666}
-.shortcut{display:flex;justify-content:center;gap:8px;margin-top:8px}
+.tip{text-align:left;margin-top:12px;color:#666}
+.shortcut{display:flex;gap:8px;margin-top:8px}
 .link{padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#f7f7f7;cursor:pointer}
 </style>

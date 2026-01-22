@@ -3,22 +3,27 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import http from './services/http'
 const route = useRoute()
-const nav = ref([
-  { path: '/errands', label: '跑腿广场' },
-  { path: '/errands/create', label: '发布跑腿' },
-  { path: '/orders', label: '我的订单' },
-  { path: '/wallet', label: '钱包' },
-  { path: '/shop', label: '商品商城' },
-  { path: '/shop/create', label: '发布商品' }
-])
+const navAll = [
+  { path: '/errands', label: '跑腿广场', roles: [1,2,3] },
+  { path: '/errands/create', label: '发布跑腿', roles: [1] },           // 普通用户可发布
+  { path: '/orders', label: '我的订单', roles: [1,2,3] },
+  { path: '/wallet', label: '钱包', roles: [1,2,3] },
+  { path: '/shop', label: '商品商城', roles: [1,2,3] },
+  { path: '/shop/create', label: '发布商品', roles: [3] }               // 仅商家
+]
+const nav = ref(navAll)
+const userType = ref(null)
 const nickname = ref('')
 const loggedIn = ref(false)
 const refreshAuth = async () => {
   const token = localStorage.getItem('token')
   loggedIn.value = !!token
   const n = localStorage.getItem('nickname')
+  const t = localStorage.getItem('userType')
+  userType.value = t ? Number(t) : null
   if (n) {
     nickname.value = n
+    nav.value = navAll.filter(i => !userType.value || i.roles.includes(userType.value))
     return
   }
   if (token) {
@@ -26,7 +31,10 @@ const refreshAuth = async () => {
       const { data } = await http.get('/auth/profile')
       if (data && data.code === 1 && data.data) {
         nickname.value = String(data.data.nickname || '')
+        userType.value = Number(data.data.userType || 0) || null
         localStorage.setItem('nickname', nickname.value)
+        if (userType.value) localStorage.setItem('userType', String(userType.value))
+        nav.value = navAll.filter(i => !userType.value || i.roles.includes(userType.value))
       }
     } catch (e) {}
   }
