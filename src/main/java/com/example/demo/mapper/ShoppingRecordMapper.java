@@ -11,4 +11,9 @@ public interface ShoppingRecordMapper {
     void batchInsert(@Param("records") List<ShoppingRecord> records);
     List<ShoppingRecord> listByUser(@Param("userId") Long userId);
     void deleteByIdAndUser(@Param("recordId") Long recordId, @Param("userId") Long userId);
+    List<ShoppingRecord> listByUserFilter(@Param("userId") Long userId,
+                                          @Param("start") String start,
+                                          @Param("end") String end,
+                                          @Param("orderNo") String orderNo);
+    void deleteBatchByUser(@Param("userId") Long userId, @Param("ids") List<Long> ids);
 }

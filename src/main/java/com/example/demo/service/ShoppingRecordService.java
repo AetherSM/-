@@ -8,4 +8,6 @@ public interface ShoppingRecordService {
     void batchInsert(List<ShoppingRecord> records);
     List<ShoppingRecord> listByUser(Long userId);
     void delete(Long userId, Long recordId);
+    List<ShoppingRecord> listByUserFilter(Long userId, String start, String end, String orderNo);
+    void deleteBatch(Long userId, List<Long> ids);
 }

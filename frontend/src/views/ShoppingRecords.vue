@@ -2,13 +2,30 @@
 import { ref, onMounted } from 'vue'
 import http from '../services/http'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const list = ref([])
 const loading = ref(false)
-const error = ref('')
+const dateRange = ref([])
+const orderNo = ref('')
+const selected = ref(new Set())
+const load = async () => {
 const load = async () => {
   loading.value = true
   error.value = ''
-  try {
+    const params = {}
+    if (dateRange.value?.length === 2) {
+      const [s, e] = dateRange.value
+      const fmt = (d) => {
+        const y = d.getFullYear()
+        const m = String(d.getMonth()+1).padStart(2,'0')
+        const day = String(d.getDate()).padStart(2,'0')
+        return `${y}-${m}-${day} 00:00:00`
+      }
+      params.start = fmt(s)
+      params.end = fmt(e)
+    }
+    if (orderNo.value) params.orderNo = orderNo.value
+    const { data } = await http.get('/api/shopping-records', { params })
     const { data } = await http.get('/api/shopping-records')
     if (data && data.code === 1) list.value = data.data || []
     else error.value = data?.msg || '加载失败'
@@ -17,6 +34,9 @@ const load = async () => {
   } finally {
     loading.value = false
   }
+}
+const toggleSelect = (id, checked) => {
+  if (checked) selected.value.add(id); else selected.value.delete(id)
 }
 onMounted(load)
 const removeItem = async (id) => {
@@ -34,13 +54,45 @@ const removeItem = async (id) => {
   } catch (e) {
     ElMessage.error('请求失败')
   }
+const search = async () => { await load() }
+const removeBatch = async () => {
+  if (!selected.value.size) { ElMessage.error('请选择记录'); return }
+  try {
+    await ElMessageBox.confirm(`确认删除选中的${selected.value.size}条记录？`, '提示', { type: 'warning' })
+  } catch (e) { return }
+  try {
+    const ids = Array.from(selected.value)
+    const { data } = await http.delete('/api/shopping-records/batch', { data: ids })
+    if (data && data.code === 1) {
+      ElMessage.success('批量删除成功')
+      selected.value.clear()
+      await load()
+    } else {
+      ElMessage.error(data?.msg || '批量删除失败')
+    }
+  } catch (e) { ElMessage.error('请求失败') }
+}
 }
 </script>
 
 <template>
   <div>
+    <div class="filters">
+      <el-date-picker
+        v-model="dateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        format="YYYY-MM-DD"
+      />
+      <input class="order-input" v-model="orderNo" placeholder="订单号" />
+      <button class="btn" @click="search">查询</button>
+      <button class="btn danger" @click="removeBatch">批量删除</button>
+    </div>
     <h2>购物记录</h2>
-    <div class="list">
+      <div v-for="r in list" :key="r.recordId" class="row">
+        <input type="checkbox" :checked="selected.has(r.recordId)" @change="toggleSelect(r.recordId, $event.target.checked)" />
       <div v-for="r in list" :key="r.recordId" class="row">
         <img :src="r.productImage || 'https://via.placeholder.com/80x80?text=Img'" />
         <div class="info">
@@ -58,8 +110,10 @@ const removeItem = async (id) => {
   </div>
 </template>
 
+.filters{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.order-input{padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
 <style scoped>
-.list{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:24px 80px 1fr 120px 80px 160px 100px;gap:10px;align-items:center;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row{display:grid;grid-template-columns:80px 1fr 120px 80px 160px 100px;gap:10px;align-items:center;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row img{width:80px;height:80px;object-fit:cover;border-radius:8px;background:#f3f4f6}
 .name{font-weight:600}
@@ -69,5 +123,5 @@ const removeItem = async (id) => {
 .subtotal{color:#111827;font-weight:600}
 .empty{padding:24px;text-align:center;color:#999}
 .error{padding:12px;color:#d33}
-.btn{padding:8px 12px;border:none;border-radius:10px;background:#e5e7eb;color:#111827;cursor:pointer}
+.btn.danger{background:#ef4444;color:#fff}
 </style>

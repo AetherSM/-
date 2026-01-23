@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import http from '../services/http'
+import { ElMessage } from 'element-plus'
 const list = ref([])
 const loading = ref(false)
 const error = ref('')
@@ -17,9 +18,9 @@ const load = async () => {
 const receive = async (couponId) => {
   try {
     const { data } = await http.post('/api/coupons/receive', null, { params: { userId, couponId } })
-    if (data && data.code === 1) alert('领取成功')
-    else alert(data?.msg || '领取失败')
-  } catch (e) { alert('请求失败') }
+    if (data && data.code === 1) ElMessage.success('领取成功')
+    else ElMessage.error(data?.msg || '领取失败')
+  } catch (e) { ElMessage.error('请求失败') }
 }
 onMounted(load)
 </script>

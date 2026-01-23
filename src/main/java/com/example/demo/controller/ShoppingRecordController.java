@@ -21,9 +21,16 @@ public class ShoppingRecordController {
 
     @GetMapping
     @Operation(summary = "查询我的购物记录", description = "查询当前登录用户的购物记录")
-    public Result<List<ShoppingRecord>> listMy() {
+    public Result<List<ShoppingRecord>> listMy(
+            @RequestParam(required = false) String start,
+            @RequestParam(required = false) String end,
+            @RequestParam(required = false) String orderNo
+    ) {
         Long userId = BaseContext.getCurrentId();
         if (userId == null) throw new IllegalArgumentException("未登录");
+        if ((start != null && !start.isEmpty()) || (end != null && !end.isEmpty()) || (orderNo != null && !orderNo.isEmpty())) {
+            return Result.success(shoppingRecordService.listByUserFilter(userId, start, end, orderNo));
+        }
         return Result.success(shoppingRecordService.listByUser(userId));
     }
 
@@ -33,6 +40,15 @@ public class ShoppingRecordController {
         Long userId = BaseContext.getCurrentId();
         if (userId == null) throw new IllegalArgumentException("未登录");
         shoppingRecordService.delete(userId, recordId);
+        return Result.success();
+    }
+
+    @DeleteMapping("/batch")
+    @Operation(summary = "批量删除购物记录", description = "根据记录ID列表批量删除当前用户的购物记录")
+    public Result<Void> deleteBatch(@RequestBody List<Long> ids) {
+        Long userId = BaseContext.getCurrentId();
+        if (userId == null) throw new IllegalArgumentException("未登录");
+        shoppingRecordService.deleteBatch(userId, ids);
         return Result.success();
     }
 }

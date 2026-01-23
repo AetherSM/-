@@ -29,4 +29,15 @@ public class ShoppingRecordServiceImpl implements ShoppingRecordService {
     public void delete(Long userId, Long recordId) {
         shoppingRecordMapper.deleteByIdAndUser(recordId, userId);
     }
+
+    @Override
+    public List<ShoppingRecord> listByUserFilter(Long userId, String start, String end, String orderNo) {
+        return shoppingRecordMapper.listByUserFilter(userId, start, end, orderNo);
+    }
+
+    @Override
+    public void deleteBatch(Long userId, List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        shoppingRecordMapper.deleteBatchByUser(userId, ids);
+    }
 }
