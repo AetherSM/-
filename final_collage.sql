@@ -198,6 +198,21 @@ create index idx_order
 create index product_id
     on order_items (product_id);
 
+-- 购物车
+create table if not exists cart_items
+(
+    cart_item_id bigint auto_increment primary key,
+    user_id      bigint       not null comment '用户ID',
+    product_id   bigint       not null comment '商品ID',
+    quantity     int          not null default 1 comment '数量',
+    create_time  timestamp    default CURRENT_TIMESTAMP null,
+    update_time  timestamp    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint cart_items_user_product unique (user_id, product_id),
+    constraint fk_cart_user foreign key (user_id) references users (user_id),
+    constraint fk_cart_product foreign key (product_id) references products (product_id)
+);
+
+
 create index idx_category
     on products (category_id);
 
@@ -363,4 +378,3 @@ create table complaints
 
 create index idx_complainant
     on complaints (complainant_id);
-

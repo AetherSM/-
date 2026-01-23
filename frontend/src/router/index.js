@@ -9,6 +9,7 @@ import ProductDetail from '../views/ProductDetail.vue'
 import ProductCreate from '../views/ProductCreate.vue'
 import Addresses from '../views/Addresses.vue'
 import Coupons from '../views/Coupons.vue'
+import Cart from '../views/Cart.vue'
 
 const routes = [
   { path: '/', redirect: '/errands' },
@@ -22,7 +23,8 @@ const routes = [
   ,
   { path: '/shop', component: ProductList, meta: { requiresAuth: true } },
   { path: '/shop/create', component: ProductCreate, meta: { requiresAuth: true } },
-  { path: '/shop/:id', component: ProductDetail, meta: { requiresAuth: true } }
+  { path: '/shop/:id', component: ProductDetail, meta: { requiresAuth: true } },
+  { path: '/cart', component: Cart, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({

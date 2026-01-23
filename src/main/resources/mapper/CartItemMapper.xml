@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CartItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.pojo.entity.CartItem">
+        <id column="cart_item_id" property="cartItemId"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="cartItemId" keyColumn="cart_item_id">
+        insert into cart_items(user_id, product_id, quantity, create_time, update_time)
+        values(#{userId}, #{productId}, #{quantity}, now(), now())
+        on duplicate key update quantity = quantity + values(quantity), update_time = now()
+    </insert>
+
+    <update id="updateQuantity">
+        update cart_items
+        set quantity = #{quantity}, update_time = now()
+        where user_id = #{userId} and product_id = #{productId}
+    </update>
+
+    <select id="findByUserAndProduct" resultMap="BaseResultMap">
+        select * from cart_items where user_id = #{userId} and product_id = #{productId}
+    </select>
+
+    <select id="listByUser" resultMap="BaseResultMap">
+        select * from cart_items where user_id = #{userId} order by update_time desc
+    </select>
+
+    <delete id="deleteByUserAndProduct">
+        delete from cart_items where user_id = #{userId} and product_id = #{productId}
+    </delete>
+
+    <delete id="clearByUser">
+        delete from cart_items where user_id = #{userId}
+    </delete>
+
+</mapper>
