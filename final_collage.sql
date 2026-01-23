@@ -212,6 +212,24 @@ create table if not exists cart_items
     constraint fk_cart_product foreign key (product_id) references products (product_id)
 );
 
+-- 购物记录
+create table if not exists shopping_records
+(
+    record_id     bigint auto_increment primary key,
+    user_id       bigint       not null,
+    order_no      varchar(32)  not null,
+    product_id    bigint       not null,
+    product_name  varchar(100) not null,
+    product_image varchar(255) null,
+    price         decimal(10,2) not null,
+    quantity      int          not null,
+    subtotal      decimal(10,2) not null,
+    created_at    timestamp    default CURRENT_TIMESTAMP null,
+    index idx_user_created(user_id, created_at),
+    constraint fk_sr_user foreign key (user_id) references users (user_id),
+    constraint fk_sr_product foreign key (product_id) references products (product_id)
+);
+
 
 create index idx_category
     on products (category_id);

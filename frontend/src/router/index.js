@@ -10,6 +10,7 @@ import ProductCreate from '../views/ProductCreate.vue'
 import Addresses from '../views/Addresses.vue'
 import Coupons from '../views/Coupons.vue'
 import Cart from '../views/Cart.vue'
+import ShoppingRecords from '../views/ShoppingRecords.vue'
 
 const routes = [
   { path: '/', redirect: '/errands' },
@@ -25,6 +26,8 @@ const routes = [
   { path: '/shop/create', component: ProductCreate, meta: { requiresAuth: true } },
   { path: '/shop/:id', component: ProductDetail, meta: { requiresAuth: true } },
   { path: '/cart', component: Cart, meta: { requiresAuth: true } }
+  ,
+  { path: '/records', component: ShoppingRecords, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({

@@ -4,12 +4,14 @@ import com.example.demo.mapper.OrderItemMapper;
 import com.example.demo.mapper.AddressMapper;
 import com.example.demo.mapper.ProductMapper;
 import com.example.demo.mapper.ProductOrderMapper;
+import com.example.demo.mapper.ShoppingRecordMapper;
 import com.example.demo.pojo.dto.OrderCreateDTO;
 import com.example.demo.pojo.dto.OrderItemDTO;
 import com.example.demo.pojo.entity.OrderItem;
 import com.example.demo.pojo.entity.Address;
 import com.example.demo.pojo.entity.Product;
 import com.example.demo.pojo.entity.ProductOrder;
+import com.example.demo.pojo.entity.ShoppingRecord;
 import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private ShoppingRecordMapper shoppingRecordMapper;
 
     private static final DateTimeFormatter ORDER_NO_FMT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private static final Random RANDOM = new Random();
@@ -136,6 +141,21 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("订单状态不允许支付");
         }
         productOrderMapper.markPay(orderNo);
+        List<OrderItem> items = orderItemMapper.listByOrderId(order.getOrderId());
+        List<ShoppingRecord> records = new ArrayList<>();
+        for (OrderItem oi : items) {
+            ShoppingRecord r = new ShoppingRecord();
+            r.setUserId(userId);
+            r.setOrderNo(orderNo);
+            r.setProductId(oi.getProductId());
+            r.setProductName(oi.getProductName());
+            r.setProductImage(oi.getProductImage());
+            r.setPrice(oi.getPrice());
+            r.setQuantity(oi.getQuantity());
+            r.setSubtotal(oi.getSubtotal());
+            records.add(r);
+        }
+        shoppingRecordMapper.batchInsert(records);
     }
 
     @Override
@@ -198,4 +218,3 @@ public class OrderServiceImpl implements OrderService {
         return "PO" + LocalDateTime.now().format(ORDER_NO_FMT) + (1000 + RANDOM.nextInt(9000));
     }
 }
-

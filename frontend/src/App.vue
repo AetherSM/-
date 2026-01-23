@@ -13,6 +13,7 @@ const navAll = [
   { path: '/coupons', label: '优惠券', roles: [1,2,3] },
   { path: '/shop', label: '商品商城', roles: [1,2,3] },
   { path: '/cart', label: '购物车', roles: [1,2,3] },
+  { path: '/records', label: '购物记录', roles: [1,2,3] },
   { path: '/shop/create', label: '发布商品', roles: [3] }               // 仅商家
 ]
 const nav = ref(navAll)
