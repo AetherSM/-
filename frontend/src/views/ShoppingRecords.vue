@@ -2,43 +2,51 @@
 import { ref, onMounted } from 'vue'
 import http from '../services/http'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
+
 const list = ref([])
 const loading = ref(false)
+const error = ref('')
 const dateRange = ref([])
 const orderNo = ref('')
 const selected = ref(new Set())
-const load = async () => {
+
 const load = async () => {
   loading.value = true
   error.value = ''
+  try {
     const params = {}
     if (dateRange.value?.length === 2) {
       const [s, e] = dateRange.value
-      const fmt = (d) => {
+      const fmt = (d, end = false) => {
         const y = d.getFullYear()
-        const m = String(d.getMonth()+1).padStart(2,'0')
-        const day = String(d.getDate()).padStart(2,'0')
-        return `${y}-${m}-${day} 00:00:00`
+        const m = String(d.getMonth() + 1).padStart(2, '0')
+        const day = String(d.getDate()).padStart(2, '0')
+        return `${y}-${m}-${day} ${end ? '23:59:59' : '00:00:00'}`
       }
       params.start = fmt(s)
-      params.end = fmt(e)
+      params.end = fmt(e, true)
     }
     if (orderNo.value) params.orderNo = orderNo.value
     const { data } = await http.get('/api/shopping-records', { params })
-    const { data } = await http.get('/api/shopping-records')
-    if (data && data.code === 1) list.value = data.data || []
-    else error.value = data?.msg || '加载失败'
+    if (data && data.code === 1) {
+      list.value = data.data || []
+    } else {
+      error.value = data?.msg || '加载失败'
+      ElMessage.error(error.value)
+    }
   } catch (e) {
     error.value = '请求失败'
+    ElMessage.error(error.value)
   } finally {
     loading.value = false
   }
 }
+
 const toggleSelect = (id, checked) => {
-  if (checked) selected.value.add(id); else selected.value.delete(id)
+  if (checked) selected.value.add(id)
+  else selected.value.delete(id)
 }
-onMounted(load)
+
 const removeItem = async (id) => {
   try {
     await ElMessageBox.confirm('确认删除该记录？', '提示', { type: 'warning' })
@@ -54,7 +62,10 @@ const removeItem = async (id) => {
   } catch (e) {
     ElMessage.error('请求失败')
   }
+}
+
 const search = async () => { await load() }
+
 const removeBatch = async () => {
   if (!selected.value.size) { ElMessage.error('请选择记录'); return }
   try {
@@ -72,7 +83,8 @@ const removeBatch = async () => {
     }
   } catch (e) { ElMessage.error('请求失败') }
 }
-}
+
+onMounted(load)
 </script>
 
 <template>
@@ -91,9 +103,9 @@ const removeBatch = async () => {
       <button class="btn danger" @click="removeBatch">批量删除</button>
     </div>
     <h2>购物记录</h2>
+    <div class="list">
       <div v-for="r in list" :key="r.recordId" class="row">
         <input type="checkbox" :checked="selected.has(r.recordId)" @change="toggleSelect(r.recordId, $event.target.checked)" />
-      <div v-for="r in list" :key="r.recordId" class="row">
         <img :src="r.productImage || 'https://via.placeholder.com/80x80?text=Img'" />
         <div class="info">
           <div class="name">{{ r.productName }}</div>
@@ -110,11 +122,11 @@ const removeBatch = async () => {
   </div>
 </template>
 
+<style scoped>
 .filters{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 .order-input{padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
-<style scoped>
+.list{display:flex;flex-direction:column;gap:8px}
 .row{display:grid;grid-template-columns:24px 80px 1fr 120px 80px 160px 100px;gap:10px;align-items:center;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
-.row{display:grid;grid-template-columns:80px 1fr 120px 80px 160px 100px;gap:10px;align-items:center;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row img{width:80px;height:80px;object-fit:cover;border-radius:8px;background:#f3f4f6}
 .name{font-weight:600}
 .meta{color:#6b7280;font-size:12px}
@@ -123,5 +135,6 @@ const removeBatch = async () => {
 .subtotal{color:#111827;font-weight:600}
 .empty{padding:24px;text-align:center;color:#999}
 .error{padding:12px;color:#d33}
+.btn{padding:8px 12px;border:none;border-radius:10px;background:#e5e7eb;color:#111827;cursor:pointer}
 .btn.danger{background:#ef4444;color:#fff}
 </style>
