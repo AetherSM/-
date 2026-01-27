@@ -1,14 +1,19 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constant.Messages;
+import com.example.demo.expection.NotExistException;
 import com.example.demo.mapper.ProductMapper;
 import com.example.demo.pojo.dto.ProductCreateDTO;
 import com.example.demo.pojo.entity.Product;
 import com.example.demo.service.ProductService;
+import com.example.demo.expection.NoPermissionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -65,10 +70,10 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Long productId, Long sellerId, ProductCreateDTO dto) {
         Product existing = productMapper.findById(productId);
         if (existing == null) {
-            throw new IllegalArgumentException("商品不存在");
+            throw new IllegalArgumentException(Messages.PRODUCT_NOT_FOUND);
         }
         if (!existing.getSellerId().equals(sellerId)) {
-            throw new IllegalArgumentException("无权限操作该商品");
+            throw new IllegalArgumentException(Messages.NO_PERMISSION_PRODUCT);
         }
         existing.setCategoryId(dto.getCategoryId());
         existing.setProductName(dto.getProductName());
@@ -88,10 +93,10 @@ public class ProductServiceImpl implements ProductService {
     public void updateStatus(Long productId, Integer status, Long sellerId) {
         Product existing = productMapper.findById(productId);
         if (existing == null) {
-            throw new IllegalArgumentException("商品不存在");
+            throw new NotExistException(Messages.PRODUCT_NOT_FOUND);
         }
         if (!existing.getSellerId().equals(sellerId)) {
-            throw new IllegalArgumentException("无权限操作该商品");
+            throw new NoPermissionException(Messages.NO_PERMISSION_PRODUCT);
         }
         productMapper.updateStatus(productId, status);
     }
@@ -100,10 +105,10 @@ public class ProductServiceImpl implements ProductService {
     public void adjustStock(Long productId, Integer stock, Integer delta, Long sellerId) {
         Product existing = productMapper.findById(productId);
         if (existing == null) {
-            throw new IllegalArgumentException("商品不存在");
+            throw new NotExistException(Messages.PRODUCT_NOT_FOUND);
         }
         if (!existing.getSellerId().equals(sellerId)) {
-            throw new IllegalArgumentException("无权限操作该商品");
+            throw new NoPermissionException(Messages.NO_PERMISSION_PRODUCT);
         }
         if (stock == null && delta == null) {
             throw new IllegalArgumentException("请提供 stock 或 delta");
@@ -122,4 +127,3 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 }
-

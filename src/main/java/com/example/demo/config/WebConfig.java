@@ -26,15 +26,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/auth/register",  // 排除注册接口
                         "/auth/login",     // 排除登录接口
-                        "/auth/logout",    // 排除退出接口
-                        "/auth/query",     // 排除查询接口
-                        "/auth/query/**",
-                        "/doc.html",                // Knife4j 接口文档
-                        "/webjars/**",              // 静态资源
-                        "/swagger-resources/**",    // Swagger 资源
-                        "/v3/api-docs/**",          // API 文档数据
-                        "/swagger-ui/**",           // Swagger UI 资源
-                        "/swagger-ui.html"          // Swagger UI 页面
+                        "/auth/query",     // 排除查询接口（如果需要公开访问）
+                        "/auth/query/**" ,  // 排除查询接口（如果需要公开访问）
+                        "/swagger-ui.html",
+                        "/v3/api-docs"
                 );
     }
 
@@ -51,3 +46,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 }
+

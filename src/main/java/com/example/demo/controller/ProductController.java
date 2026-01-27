@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.context.BaseContext;
+import com.example.demo.constant.Messages;
 import com.example.demo.pojo.dto.ProductCreateDTO;
 import com.example.demo.pojo.entity.Product;
 import com.example.demo.pojo.entity.UserEntity;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.NoPermissionException;
 import java.util.List;
 
 @RestController
@@ -95,7 +97,7 @@ public class ProductController {
      */
     @PatchMapping("/{id}/status")
     @Operation(summary = "更改商品状态", description = "商家上架或下架商品")
-    public Result<Void> changeStatus(@PathVariable Long id, @RequestBody ProductCreateDTO dto) {
+    public Result<Void> changeStatus(@PathVariable Long id, @RequestBody ProductCreateDTO dto)  {
         Long sellerId = requireSeller();
         productService.updateStatus(id, dto.getStatus(), sellerId);
         return Result.success();
@@ -121,12 +123,11 @@ public class ProductController {
 
     private Long requireSeller() {
         Long userId = BaseContext.getCurrentId();
-        if (userId == null) throw new IllegalArgumentException("未登录");
+        if (userId == null) throw new IllegalArgumentException(Messages.UNAUTHORIZED);
         UserEntity user = userService.findById(userId);
         if (user == null || user.getUserType() == null || user.getUserType() != 3) {
-            throw new IllegalArgumentException("仅商家可操作商品");
+            throw new IllegalArgumentException(Messages.ONLY_SELLER_PRODUCT);
         }
         return userId;
     }
 }
-

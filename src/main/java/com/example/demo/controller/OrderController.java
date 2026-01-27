@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.context.BaseContext;
+import com.example.demo.constant.Messages;
 import com.example.demo.pojo.dto.OrderCreateDTO;
 import com.example.demo.pojo.entity.OrderItem;
 import com.example.demo.pojo.entity.ProductOrder;
@@ -129,7 +130,7 @@ public class OrderController {
     public Result<Map<String, Object>> detail(@PathVariable String orderNo) {
         ProductOrder order = orderService.findByOrderNo(orderNo);
         if (order == null) {
-            return Result.error("订单不存在");
+            return Result.error(Messages.ORDER_NOT_FOUND);
         }
         List<OrderItem> items = orderService.listItems(order.getOrderId());
         Map<String, Object> res = new HashMap<>();
@@ -141,7 +142,7 @@ public class OrderController {
     private Long requireLogin() {
         Long userId = BaseContext.getCurrentId();
         if (userId == null) {
-            throw new IllegalArgumentException("未登录");
+            throw new IllegalArgumentException(Messages.UNAUTHORIZED);
         }
         return userId;
     }
@@ -150,9 +151,8 @@ public class OrderController {
         Long userId = requireLogin();
         UserEntity user = userService.findById(userId);
         if (user == null || user.getUserType() == null || user.getUserType() != 3) {
-            throw new IllegalArgumentException("仅商家可操作");
+            throw new IllegalArgumentException(Messages.ONLY_SELLER);
         }
         return userId;
     }
 }
-

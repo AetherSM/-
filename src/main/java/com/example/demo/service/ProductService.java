@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.pojo.dto.ProductCreateDTO;
 import com.example.demo.pojo.entity.Product;
 
+import javax.naming.NoPermissionException;
 import java.util.List;
 
 /**
@@ -54,7 +55,7 @@ public interface ProductService {
      * @param status 新状态
      * @param sellerId 卖家ID
      */
-    void updateStatus(Long productId, Integer status, Long sellerId);
+    void updateStatus(Long productId, Integer status, Long sellerId) ;
 
     /**
      * 调整库存

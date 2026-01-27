@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.context.BaseContext;
+import com.example.demo.constant.Messages;
 import com.example.demo.pojo.dto.ReviewCreateDTO;
 import com.example.demo.pojo.entity.Review;
 import com.example.demo.pojo.result.Result;
@@ -31,7 +32,7 @@ public class ReviewController {
     public Result<Void> addReview(@PathVariable String orderNo, @RequestBody ReviewCreateDTO dto) {
         Long userId = BaseContext.getCurrentId();
         if (userId == null) {
-            throw new IllegalArgumentException("未登录");
+            throw new IllegalArgumentException(Messages.UNAUTHORIZED);
         }
         reviewService.addReview(orderNo, userId, dto);
         return Result.success();
@@ -48,4 +49,3 @@ public class ReviewController {
         return Result.success(reviewService.listByProduct(productId));
     }
 }
-

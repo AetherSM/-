@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constant.Messages;
 import com.example.demo.mapper.CategoryMapper;
 import com.example.demo.pojo.dto.CategoryDTO;
 import com.example.demo.pojo.entity.Category;
@@ -40,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category update(Integer categoryId, CategoryDTO dto) {
         Category existing = categoryMapper.findById(categoryId);
         if (existing == null) {
-            throw new IllegalArgumentException("分类不存在");
+            throw new IllegalArgumentException(Messages.CATEGORY_NOT_FOUND);
         }
         existing.setCategoryName(dto.getCategoryName());
         existing.setParentId(dto.getParentId());
@@ -61,4 +62,3 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.findById(categoryId);
     }
 }
-
