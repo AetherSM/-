@@ -54,7 +54,12 @@
     </select>
     
     <select id="listByUser" resultMap="BaseResultMap">
-        select * from errand_orders where user_id = #{userId} order by create_time desc
+        select * from errand_orders
+        <where>
+            user_id = #{userId}
+            <if test="status != null"> and order_status = #{status} </if>
+        </where>
+        order by create_time desc
     </select>
 
     <select id="listByRunner" resultMap="BaseResultMap">

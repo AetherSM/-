@@ -49,17 +49,17 @@ const submit = async () => {
 <template>
   <div class="form">
     <h2>发布商品</h2>
-    <div class="row"><label>名称</label><input v-model="productName" /></div>
-    <div class="row"><label>描述</label><textarea v-model="description" /></div>
-    <div class="row"><label>分类ID</label><input v-model.number="categoryId" type="number" min="1" /></div>
-    <div class="row"><label>价格</label><input v-model.number="price" type="number" min="0" step="1" /></div>
-    <div class="row"><label>原价</label><input v-model.number="originalPrice" type="number" min="0" step="1" /></div>
-    <div class="row"><label>库存</label><input v-model.number="stock" type="number" min="0" step="1" /></div>
-    <div class="row"><label>主图URL</label><input v-model="mainImage" /></div>
+    <div class="row"><label>名称</label><el-input v-model="productName" placeholder="请输入商品名称" /></div>
+    <div class="row"><label>描述</label><el-input v-model="description" type="textarea" :rows="4" placeholder="请输入商品描述" /></div>
+    <div class="row"><label>分类ID</label><el-input-number v-model="categoryId" :min="1" /></div>
+    <div class="row"><label>价格</label><el-input-number v-model="price" :min="0" :step="0.01" /></div>
+    <div class="row"><label>原价</label><el-input-number v-model="originalPrice" :min="0" :step="0.01" /></div>
+    <div class="row"><label>库存</label><el-input-number v-model="stock" :min="0" /></div>
+    <div class="row"><label>主图URL</label><el-input v-model="mainImage" placeholder="请输入图片地址" /></div>
     <div class="row"><label>状态</label>
-      <select v-model="status"><option :value="1">上架</option><option :value="0">下架</option></select>
+      <el-select v-model="status" placeholder="请选择状态"><el-option :value="1" label="上架" /><el-option :value="0" label="下架" /></el-select>
     </div>
-    <button class="btn" :disabled="loading" @click="submit">{{ loading ? '提交中' : '发布' }}</button>
+    <el-button type="primary" class="btn" :loading="loading" @click="submit">发布</el-button>
     <div class="msg" v-if="message">{{ message }}</div>
     <div class="tip">注意：仅商家账号可发布商品</div>
   </div>
@@ -68,8 +68,7 @@ const submit = async () => {
 <style scoped>
 .form{width:100%;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-.row input,.row textarea,.row select{padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
-.btn{padding:10px 16px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
+.btn{margin-top:6px}
 .msg{margin-top:12px;color:#42b883}
 .tip{margin-top:8px;color:#9ca3af}
 </style>

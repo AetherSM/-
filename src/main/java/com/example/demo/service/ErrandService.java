@@ -36,7 +36,8 @@ public interface ErrandService {
     /**
      * 查询我的跑腿订单（我发布的或我接单的）
      * @param userId 用户ID
+     * @param status 订单状态（可选）
      * @return 订单列表
      */
-    List<ErrandOrder> listMyOrders(Long userId);
+    List<ErrandOrder> listMyOrders(Long userId, Integer status);
 }

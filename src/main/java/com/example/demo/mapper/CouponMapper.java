@@ -9,5 +9,6 @@ public interface CouponMapper {
     void insert(Coupon coupon);
     void update(Coupon coupon);
     Coupon findById(Long couponId);
-    List<Coupon> findAll();
+    List<Coupon> findAvailable();
+    int incrementReceiveCount(Long couponId);
 }

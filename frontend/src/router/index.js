@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import ErrandList from '../views/ErrandList.vue'
 import CreateErrand from '../views/CreateErrand.vue'
+import My from '../views/My.vue'
 import MyOrders from '../views/MyOrders.vue'
 import Wallet from '../views/Wallet.vue'
 import ProductList from '../views/ProductList.vue'
@@ -13,12 +14,13 @@ import Cart from '../views/Cart.vue'
 import ShoppingRecords from '../views/ShoppingRecords.vue'
 
 const routes = [
-  { path: '/', redirect: '/errands' },
+  { path: '/', redirect: '/shop' },
   { path: '/login', component: Login },
   { path: '/errands', component: ErrandList, meta: { requiresAuth: true } },
   { path: '/errands/create', component: CreateErrand, meta: { requiresAuth: true } },
-  { path: '/orders', component: MyOrders, meta: { requiresAuth: true } },
-  { path: '/wallet', component: Wallet, meta: { requiresAuth: true } },
+  { path: '/my', component: My, meta: { requiresAuth: true } },
+  { path: '/orders', redirect: '/my?tab=orders' },
+  { path: '/wallet', redirect: '/my?tab=wallet' },
   { path: '/addresses', component: Addresses, meta: { requiresAuth: true } },
   { path: '/coupons', component: Coupons, meta: { requiresAuth: true } }
   ,

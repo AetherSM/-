@@ -9,6 +9,7 @@
         <result column="order_id" property="orderId"/>
         <result column="order_type" property="orderType"/>
         <result column="reviewer_id" property="reviewerId"/>
+        <result column="reviewer_nickname" property="reviewerNickname"/>
         <result column="reviewee_id" property="revieweeId"/>
         <result column="rating" property="rating"/>
         <result column="content" property="content"/>
@@ -23,9 +24,10 @@
     </insert>
 
     <select id="listByProduct" resultMap="BaseResultMap">
-        select r.*
+        select r.*, u.nickname as reviewer_nickname
         from reviews r
         join order_items oi on r.order_id = oi.order_id
+        left join users u on r.reviewer_id = u.user_id
         where oi.product_id = #{productId}
           and r.order_type = 1
         order by r.create_time desc

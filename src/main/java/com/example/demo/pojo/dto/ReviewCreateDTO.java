@@ -16,5 +16,6 @@ public class ReviewCreateDTO {
     private List<String> images;
     @Schema(description = "是否匿名: 0-否, 1-是")
     private Integer isAnonymous;
+    @Schema(description = "订单类型: 1-商品订单, 2-跑腿订单")
+    private Integer orderType;
 }
-

@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/final_collage.sql" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$PROJECT_DIR$/mock_data.sql" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/AddressMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/CartItemMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/CategoryMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/ChatMessageMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/ComplaintMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
@@ -19,5 +20,7 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/WalletTransactionMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mapper/WantedPostMapper.xml" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/186864f7-9b46-4373-8bd9-bdc423965d01/console.sql" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/186864f7-9b46-4373-8bd9-bdc423965d01/console_1.sql" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/186864f7-9b46-4373-8bd9-bdc423965d01/console_2.sql" value="186864f7-9b46-4373-8bd9-bdc423965d01" />
   </component>
 </project>

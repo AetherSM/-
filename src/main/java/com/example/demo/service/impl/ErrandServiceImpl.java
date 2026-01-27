@@ -47,7 +47,7 @@ public class ErrandServiceImpl implements ErrandService {
     }
 
     @Override
-    public List<ErrandOrder> listMyOrders(Long userId) {
-        return errandOrderMapper.listByUser(userId);
+    public List<ErrandOrder> listMyOrders(Long userId, Integer status) {
+        return errandOrderMapper.listByUser(userId, status);
     }
 }

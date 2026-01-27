@@ -36,6 +36,13 @@ INSERT INTO coupons (coupon_id, name, type, value, min_spend, start_time, end_ti
 (1, '新用户专享券', 1, 10.00, 20.00, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), 1),
 (2, '全场9折券', 2, 0.90, 0.00, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1);
 
+-- 更多优惠券（包含发行总量与已领取数）
+INSERT INTO coupons (name, type, value, min_spend, total_count, received_count, start_time, end_time, status) VALUES
+('满100减20', 1, 20.00, 100.00, 500, 0, NOW(), DATE_ADD(NOW(), INTERVAL 15 DAY), 1),
+('全场95折', 2, 0.95, 0.00, 1000, 0, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), 1),
+('饮料专享券', 1, 5.00, 15.00, 300, 0, NOW(), DATE_ADD(NOW(), INTERVAL 10 DAY), 1),
+('新人立减5元', 1, 5.00, 10.00, NULL, 0, NOW(), DATE_ADD(NOW(), INTERVAL 60 DAY), 1);
+
 -- 6. 用户领取优惠券
 INSERT INTO user_coupons (user_id, coupon_id, status) VALUES
 (3, 1, 0), -- 张三领取了新用户券

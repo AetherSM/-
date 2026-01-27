@@ -106,11 +106,11 @@ onMounted(load)
     <div class="form">
       <h2>新增地址</h2>
       <div class="grid">
-        <input v-model="form.contactName" placeholder="收货人" />
-        <input v-model="form.contactPhone" placeholder="联系电话" />
-        <input v-model="form.address" placeholder="详细地址" />
-        <input v-model="form.building" placeholder="楼栋(可选)" />
-        <input v-model="form.room" placeholder="房间号(可选)" />
+        <el-input v-model="form.contactName" placeholder="收货人" />
+        <el-input v-model="form.contactPhone" placeholder="联系电话" />
+        <el-input v-model="form.address" placeholder="详细地址" />
+        <el-input v-model="form.building" placeholder="楼栋(可选)" />
+        <el-input v-model="form.room" placeholder="房间号(可选)" />
       </div>
       <div class="row-actions">
         <button class="btn" @click="create">保存</button>
@@ -118,11 +118,11 @@ onMounted(load)
     </div>
     <el-dialog v-model="editVisible" title="编辑地址" width="600px">
       <div class="grid">
-        <input v-model="editForm.contactName" placeholder="收货人" />
-        <input v-model="editForm.contactPhone" placeholder="联系电话" />
-        <input v-model="editForm.address" placeholder="详细地址" />
-        <input v-model="editForm.building" placeholder="楼栋(可选)" />
-        <input v-model="editForm.room" placeholder="房间号(可选)" />
+        <el-input v-model="editForm.contactName" placeholder="收货人" />
+        <el-input v-model="editForm.contactPhone" placeholder="联系电话" />
+        <el-input v-model="editForm.address" placeholder="详细地址" />
+        <el-input v-model="editForm.building" placeholder="楼栋(可选)" />
+        <el-input v-model="editForm.room" placeholder="房间号(可选)" />
       </div>
       <template #footer>
         <div class="dialog-footer">

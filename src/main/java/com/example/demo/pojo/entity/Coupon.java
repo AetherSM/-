@@ -25,6 +25,12 @@ public class Coupon {
     @Schema(description = "最低消费金额")
     private BigDecimal minSpend;
     
+    @Schema(description = "发行总量，null或0表示不限制")
+    private Integer totalCount;
+    
+    @Schema(description = "已领取数量")
+    private Integer receivedCount;
+    
     @Schema(description = "开始时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;

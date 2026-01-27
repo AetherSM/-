@@ -36,13 +36,13 @@ const submit = async () => {
     <h2>登录</h2>
     <div class="field">
       <label>手机号</label>
-      <input v-model="phone" placeholder="请输入手机号" />
+      <el-input v-model="phone" placeholder="请输入手机号" />
     </div>
     <div class="field">
       <label>密码</label>
-      <input v-model="password" type="password" placeholder="请输入密码" />
+      <el-input v-model="password" type="password" placeholder="请输入密码" show-password />
     </div>
-    <button class="btn" :disabled="loading" @click="submit">{{ loading ? '提交中' : '登录' }}</button>
+    <el-button type="primary" class="btn" :loading="loading" @click="submit">登录</el-button>
     <div class="msg" v-if="message">{{ message }}</div>
   </div>
   <div class="tip">测试账号可用数据库中的手机号，密码为123456</div>
@@ -55,8 +55,7 @@ const submit = async () => {
 <style scoped>
 .card{width:100%;margin:0;padding:24px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.field input{padding:10px;border:1px solid #ddd;border-radius:6px}
-.btn{width:100%;padding:10px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
+.btn{width:100%;margin-top:6px}
 .msg{margin-top:12px;color:#d33}
 .tip{text-align:left;margin-top:12px;color:#666}
 .shortcut{display:flex;gap:8px;margin-top:8px}

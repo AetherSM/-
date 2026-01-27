@@ -80,7 +80,8 @@ public class ErrandController {
     @Operation(summary = "我的订单", description = "查询用户发布或接取的跑腿订单")
     @GetMapping("/my")
     public Result<List<ErrandOrder>> listMyOrders(
-            @Parameter(description = "用户ID", required = true) @RequestParam Long userId) {
-        return Result.success(errandService.listMyOrders(userId));
+            @Parameter(description = "用户ID", required = true) @RequestParam Long userId,
+            @Parameter(description = "订单状态: 1-待接单,2-已接单,3-配送中,4-已完成,5-已取消", required = false) @RequestParam(required = false) Integer status) {
+        return Result.success(errandService.listMyOrders(userId, status));
     }
 }

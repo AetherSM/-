@@ -90,17 +90,10 @@ onMounted(load)
 <template>
   <div>
     <div class="filters">
-      <el-date-picker
-        v-model="dateRange"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        format="YYYY-MM-DD"
-      />
-      <input class="order-input" v-model="orderNo" placeholder="订单号" />
-      <button class="btn" @click="search">查询</button>
-      <button class="btn danger" @click="removeBatch">批量删除</button>
+      <el-date-picker v-model="dateRange" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="YYYY-MM-DD" />
+      <el-input v-model="orderNo" placeholder="订单号" class="order-input" />
+      <el-button class="btn" type="primary" @click="search">查询</el-button>
+      <el-button class="btn danger" type="danger" @click="removeBatch">批量删除</el-button>
     </div>
     <h2>购物记录</h2>
     <div class="list">
@@ -124,7 +117,7 @@ onMounted(load)
 
 <style scoped>
 .filters{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-.order-input{padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+.order-input{max-width:220px}
 .list{display:flex;flex-direction:column;gap:8px}
 .row{display:grid;grid-template-columns:24px 80px 1fr 120px 80px 160px 100px;gap:10px;align-items:center;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row img{width:80px;height:80px;object-fit:cover;border-radius:8px;background:#f3f4f6}

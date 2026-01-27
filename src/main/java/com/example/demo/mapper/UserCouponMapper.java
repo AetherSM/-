@@ -9,4 +9,5 @@ public interface UserCouponMapper {
     void insert(UserCoupon userCoupon);
     void updateStatus(Long id, Integer status, Long orderId);
     List<UserCoupon> listByUser(Long userId, Integer status);
+    int countByUserAndCoupon(Long userId, Long couponId);
 }

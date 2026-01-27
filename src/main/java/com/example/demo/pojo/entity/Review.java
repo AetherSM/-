@@ -17,6 +17,8 @@ public class Review {
     private Integer orderType; // 1-商品订单,2-跑腿订单
     @Schema(description = "评价人ID")
     private Long reviewerId;
+    @Schema(description = "评价人昵称")
+    private String reviewerNickname;
     @Schema(description = "被评价人ID")
     private Long revieweeId;
     @Schema(description = "评分: 1-5")
@@ -31,4 +33,3 @@ public class Review {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }
-

@@ -11,6 +11,6 @@ public interface ErrandOrderMapper {
     void updateStatus(@Param("orderNo") String orderNo, @Param("status") Integer status);
     ErrandOrder findByOrderNo(String orderNo);
     List<ErrandOrder> listByStatus(Integer status);
-    List<ErrandOrder> listByUser(Long userId);
+    List<ErrandOrder> listByUser(@Param("userId") Long userId, @Param("status") Integer status);
     List<ErrandOrder> listByRunner(Long runnerId);
 }

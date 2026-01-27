@@ -31,4 +31,8 @@
             and status = #{status}
         </if>
     </select>
+    
+    <select id="countByUserAndCoupon" resultType="int">
+        select count(1) from user_coupons where user_id = #{userId} and coupon_id = #{couponId}
+    </select>
 </mapper>

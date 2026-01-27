@@ -309,6 +309,8 @@ create table coupons
     type        tinyint                             not null comment '类型:1-满减,2-折扣',
     value       decimal(10, 2)                      not null comment '面值/折扣率',
     min_spend   decimal(10, 2) default 0.00         null comment '最低消费门槛',
+    total_count int                                 null comment '发行总量, null或0表示不限制',
+    received_count int       default 0              null comment '已领取数量',
     start_time  timestamp                           null comment '有效期开始',
     end_time    timestamp                           null comment '有效期结束',
     status      tinyint        default 1            null comment '状态:0-无效,1-有效',
