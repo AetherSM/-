@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import http from '../services/http'
 import { ElMessage } from 'element-plus'
+const router = useRouter()
 const items = ref([]) // { cartItem: {...}, product: {...} }
 const addresses = ref([])
 const addressId = ref(null)
@@ -54,6 +56,7 @@ const checkout = async () => {
       ElMessage.success('支付成功')
       checkoutVisible.value = false
       await load()
+      router.push({ path: '/my', query: { tab: 'orders' } })
     } else {
       ElMessage.error(data?.msg || '下单失败')
     }
