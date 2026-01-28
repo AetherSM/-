@@ -9,6 +9,7 @@ const contactName = ref('')
 const contactPhone = ref('')
 const reward = ref(5)
 const errandType = ref(1)
+const userId = Number(localStorage.getItem('userId') || 0)
 const message = ref('')
 const loading = ref(false)
 const draftKey = 'errandDraft'
@@ -46,6 +47,10 @@ const submit = async () => {
   loading.value = true
   message.value = ''
   try {
+    if (!title.value || !pickupAddress.value || !deliveryAddress.value || !contactName.value || !contactPhone.value) {
+      message.value = '请完整填写信息'
+      return
+    }
     const body = {
       title: title.value,
       description: description.value,
@@ -54,7 +59,10 @@ const submit = async () => {
       contactName: contactName.value,
       contactPhone: contactPhone.value,
       reward: reward.value,
-      errandType: errandType.value
+      errandType: errandType.value,
+      userId: userId,
+      tip: 0,
+      totalAmount: reward.value
     }
     const { data } = await http.post('/api/errands/create', body)
     if (data && data.code === 1) {
@@ -119,7 +127,7 @@ const submit = async () => {
       <label>赏金</label>
       <el-input-number v-model="reward" :min="0" :step="1" />
     </div>
-    <el-button type="primary" class="btn" :loading="loading" @click="submit">发布</el-button>
+    <button class="btn" :disabled="loading" @click="submit">发布</button>
     <div class="msg" v-if="message">{{ message }}</div>
   </div>
 </template>
@@ -127,6 +135,7 @@ const submit = async () => {
 <style scoped>
 .form{width:100%;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-.btn{margin-top:6px}
+.btn{margin-top:6px;padding:8px 12px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
+.btn[disabled]{opacity:0.6;cursor:not-allowed}
 .msg{margin-top:12px;color:#42b883}
 </style>
