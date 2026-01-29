@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import http from '../services/http'
 import { ElMessage } from 'element-plus'
 const orders = ref([])
@@ -7,6 +7,24 @@ const loading = ref(false)
 const error = ref('')
 const userId = localStorage.getItem('userId')
 const status = ref(null) // null: 全部, 4: 已完成, 5: 已取消
+const keyword = ref('')
+const displayed = computed(() => {
+  const kw = (keyword.value || '').trim().toLowerCase()
+  const src = orders.value
+  if (!kw) return src
+  return src.filter(item => {
+    const s = [
+      item.orderNo,
+      item.title,
+      item.pickupAddress,
+      item.deliveryAddress,
+      item.contactName,
+      item.contactPhone,
+      item.pickupCode
+    ].map(x => String(x || '').toLowerCase()).join(' ')
+    return s.includes(kw)
+  })
+})
 const reviewVisible = ref(false)
 const currentOrderNo = ref('')
 const rating = ref(5)
@@ -73,8 +91,9 @@ const statusMap = {
         <option :value="5">历史-已取消</option>
       </select>
       <button class="btn gray" @click="load">刷新</button>
+      <input class="search" v-model="keyword" placeholder="搜索订单号/标题/地址/联系人" />
     </div>
-    <div v-for="item in orders" :key="item.orderId" class="card">
+    <div v-for="item in displayed" :key="item.orderId" class="card">
       <div class="row">
         <div class="title">{{ item.title }}</div>
         <div class="status" :class="{'done': item.orderStatus===4}">{{ statusMap[item.orderStatus] }}</div>
@@ -118,6 +137,7 @@ const statusMap = {
 .status{color:#999}
 .desc{color:#666;font-size:14px}
 .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.search{flex:1;max-width:320px;border:1px solid #e5e7eb;border-radius:8px;padding:6px}
 .ops{display:flex;gap:8px;margin-top:8px}
 .btn{padding:8px 12px;border:none;border-radius:10px;background:#42b883;color:#fff;cursor:pointer}
 .btn.gray{background:#e5e7eb;color:#111827}

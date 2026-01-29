@@ -5,14 +5,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const phone = ref('')
 const password = ref('')
-const userType = ref(1)
 const loading = ref(false)
 const message = ref('')
 const submit = async () => {
   loading.value = true
   message.value = ''
   try {
-    const { data } = await http.post('/auth/login', { phone: phone.value, password: password.value, userType: userType.value })
+    const { data } = await http.post('/auth/login', { phone: phone.value, password: password.value })
     if (data && data.code === 1 && data.data && data.data.token) {
       localStorage.setItem('token', data.data.token)
       localStorage.setItem('userId', String(data.data.user.userId))
@@ -51,24 +50,15 @@ const submit = async () => {
       <label>密码</label>
       <el-input v-model="password" type="password" placeholder="请输入密码" show-password />
     </div>
-    <div class="field">
-      <label>角色</label>
-      <el-radio-group v-model="userType">
-        <el-radio :label="1">用户</el-radio>
-        <el-radio :label="2">跑腿</el-radio>
-        <el-radio :label="3">商家</el-radio>
-        <el-radio :label="0">管理员</el-radio>
-      </el-radio-group>
-    </div>
     <el-button type="primary" class="btn" :loading="loading" @click="submit">登录</el-button>
     <div class="msg" v-if="message">{{ message }}</div>
   </div>
   <div class="tip">测试账号可用数据库中的手机号，密码为123456</div>
   <div class="shortcut">
-    <button class="link" @click="phone='13800000003';password='123456';userType=1">张三(用户)</button>
-    <button class="link" @click="phone='13800000001';password='123456';userType=3">超市(商家)</button>
-    <button class="link" @click="phone='13800000002';password='123456';userType=2">飞毛腿(跑腿)</button>
-    <button class="link" @click="phone='13800000000';password='123456';userType=0">管理员</button>
+    <button class="link" @click="phone='13800000003';password='123456'">张三(用户)</button>
+    <button class="link" @click="phone='13800000001';password='123456'">超市(商家)</button>
+    <button class="link" @click="phone='13800000002';password='123456'">飞毛腿(跑腿)</button>
+    <button class="link" @click="phone='13800000000';password='123456'">管理员</button>
   </div>
   </template>
 

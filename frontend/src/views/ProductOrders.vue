@@ -1,11 +1,25 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import http from '../services/http'
 import { ElMessage } from 'element-plus'
 const list = ref([])
 const loading = ref(false)
 const error = ref('')
 const status = ref(null) // 1-待支付,2-待发货,3-待收货,4-已完成,5-已取消
+const keyword = ref('')
+const displayedList = computed(() => {
+  const kw = (keyword.value || '').trim().toLowerCase()
+  if (!kw) return list.value
+  return list.value.filter(o => {
+    const s = [
+      o.orderNo,
+      o.contactName,
+      o.contactPhone,
+      o.deliveryAddress
+    ].map(x => String(x || '').toLowerCase()).join(' ')
+    return s.includes(kw)
+  })
+})
 const load = async () => {
   loading.value = true
   error.value = ''
@@ -49,8 +63,9 @@ const statusText = (s) => ({
         <option :value="5">已取消</option>
       </select>
       <button class="btn gray" @click="load">刷新</button>
+      <input class="search" v-model="keyword" placeholder="搜索订单号/地址/联系人" />
     </div>
-    <div v-for="o in list" :key="o.orderId" class="card">
+    <div v-for="o in displayedList" :key="o.orderId" class="card">
       <div class="row">
         <div class="title">订单号 {{ o.orderNo }}</div>
         <div class="status">{{ statusText(o.orderStatus) }}</div>
@@ -68,6 +83,7 @@ const statusText = (s) => ({
 
 <style scoped>
 .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.search{flex:1;max-width:280px;border:1px solid #e5e7eb;border-radius:8px;padding:6px}
 .card{padding:12px;border:1px solid #eee;border-radius:8px;background:#fff;margin-bottom:10px}
 .row{display:flex;justify-content:space-between;align-items:center;margin:6px 0}
 .title{font-weight:600}

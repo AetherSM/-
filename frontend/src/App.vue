@@ -28,7 +28,6 @@ const tabs = computed(() => {
   return [
     { path: '/shop', label: '首页' },
     { path: '/cart', label: '购物车' },
-    { path: '/records', label: '订单记录' },
     { path: '/errands', label: '跑腿' },
     { path: '/my', label: '我的' }
   ]
@@ -38,9 +37,12 @@ const keyword = ref('')
 const refreshAuth = async () => {
   const token = localStorage.getItem('token')
   loggedIn.value = !!token
-  const n = localStorage.getItem('nickname')
-  if (n) { nickname.value = n; return }
-  if (token) {
+  // 始终从本地同步角色与昵称，保证底部栏立即按角色渲染
+  userType.value = Number(localStorage.getItem('userType') || 1)
+  const n = localStorage.getItem('nickname') || ''
+  nickname.value = n
+  // 若缺少服务端信息，再尝试拉取
+  if (token && !n) {
     try {
       const { data } = await http.get('/auth/profile')
       if (data && data.code === 1 && data.data) {
