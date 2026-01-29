@@ -13,5 +13,8 @@ public class LoginDTO {
     private String phone; // 手机号
     @Schema(description = "密码")
     private String password; // 密码
+
+    @Schema(description = "用户类型: 0-管理员, 1-普通, 2-跑腿员, 3-商家")
+    private Integer userType;
 }
 

@@ -1,6 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import http from '../services/http'
+
+const route = useRoute()
+const router = useRouter()
+const isEdit = ref(false)
+const productId = ref(null)
+
 const productName = ref('')
 const description = ref('')
 const categoryId = ref(1)
@@ -8,9 +15,39 @@ const price = ref(10)
 const originalPrice = ref()
 const stock = ref(10)
 const mainImage = ref('')
+const shippingAddress = ref('')
 const status = ref(1)
 const message = ref('')
 const loading = ref(false)
+
+onMounted(async () => {
+  if (route.query.id) {
+    isEdit.value = true
+    productId.value = route.query.id
+    await loadProduct()
+  }
+})
+
+const loadProduct = async () => {
+  try {
+    const { data } = await http.get(`/products/${productId.value}`)
+    if (data && data.code === 1) {
+      const p = data.data
+      productName.value = p.productName
+      description.value = p.description
+      categoryId.value = p.categoryId
+      price.value = p.price
+      originalPrice.value = p.originalPrice
+      stock.value = p.stock
+      mainImage.value = p.mainImage
+      shippingAddress.value = p.shippingAddress || ''
+      status.value = p.status
+    }
+  } catch (e) {
+    message.value = '加载商品失败'
+  }
+}
+
 const submit = async () => {
   loading.value = true
   message.value = ''
@@ -23,20 +60,34 @@ const submit = async () => {
       originalPrice: originalPrice.value,
       stock: stock.value,
       mainImage: mainImage.value,
+      shippingAddress: shippingAddress.value,
       status: status.value
     }
-    const { data } = await http.post('/products', body)
-    if (data && data.code === 1) {
-      message.value = '商品发布成功'
-      productName.value = ''
-      description.value = ''
-      price.value = 10
-      originalPrice.value = undefined
-      stock.value = 10
-      mainImage.value = ''
-      status.value = 1
+    
+    let res
+    if (isEdit.value) {
+      res = await http.put(`/products/${productId.value}`, body)
     } else {
-      message.value = data?.msg || '发布失败'
+      res = await http.post('/products', body)
+    }
+    
+    const data = res.data
+    if (data && data.code === 1) {
+      message.value = isEdit.value ? '更新成功' : '发布成功'
+      if (!isEdit.value) {
+        productName.value = ''
+        description.value = ''
+        price.value = 10
+        originalPrice.value = undefined
+        stock.value = 10
+        mainImage.value = ''
+        shippingAddress.value = ''
+        status.value = 1
+      } else {
+        setTimeout(() => router.back(), 1000)
+      }
+    } else {
+      message.value = data?.msg || (isEdit.value ? '更新失败' : '发布失败')
     }
   } catch (e) {
     message.value = '请求失败'
@@ -48,7 +99,7 @@ const submit = async () => {
 
 <template>
   <div class="form">
-    <h2>发布商品</h2>
+    <h2>{{ isEdit ? '编辑商品' : '发布商品' }}</h2>
     <div class="row"><label>名称</label><el-input v-model="productName" placeholder="请输入商品名称" /></div>
     <div class="row"><label>描述</label><el-input v-model="description" type="textarea" :rows="4" placeholder="请输入商品描述" /></div>
     <div class="row"><label>分类ID</label><el-input-number v-model="categoryId" :min="1" /></div>
@@ -56,12 +107,13 @@ const submit = async () => {
     <div class="row"><label>原价</label><el-input-number v-model="originalPrice" :min="0" :step="0.01" /></div>
     <div class="row"><label>库存</label><el-input-number v-model="stock" :min="0" /></div>
     <div class="row"><label>主图URL</label><el-input v-model="mainImage" placeholder="请输入图片地址" /></div>
+    <div class="row"><label>发货地址</label><el-input v-model="shippingAddress" placeholder="请输入发货地址" /></div>
     <div class="row"><label>状态</label>
       <el-select v-model="status" placeholder="请选择状态"><el-option :value="1" label="上架" /><el-option :value="0" label="下架" /></el-select>
     </div>
-    <el-button type="primary" class="btn" :loading="loading" @click="submit">发布</el-button>
+    <el-button type="primary" class="btn" :loading="loading" @click="submit">{{ isEdit ? '保存修改' : '发布' }}</el-button>
     <div class="msg" v-if="message">{{ message }}</div>
-    <div class="tip">注意：仅商家账号可发布商品</div>
+    <div class="tip">注意：仅商家账号可操作</div>
   </div>
 </template>
 

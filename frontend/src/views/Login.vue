@@ -5,13 +5,14 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const phone = ref('')
 const password = ref('')
+const userType = ref(1)
 const loading = ref(false)
 const message = ref('')
 const submit = async () => {
   loading.value = true
   message.value = ''
   try {
-    const { data } = await http.post('/auth/login', { phone: phone.value, password: password.value })
+    const { data } = await http.post('/auth/login', { phone: phone.value, password: password.value, userType: userType.value })
     if (data && data.code === 1 && data.data && data.data.token) {
       localStorage.setItem('token', data.data.token)
       localStorage.setItem('userId', String(data.data.user.userId))
@@ -47,8 +48,10 @@ const submit = async () => {
   </div>
   <div class="tip">测试账号可用数据库中的手机号，密码为123456</div>
   <div class="shortcut">
-    <button class="link" @click="phone='13800000003';password='123456'">填充张三</button>
-    <button class="link" @click="phone='13800000004';password='123456'">填充李四</button>
+    <button class="link" @click="phone='13800000003';password='123456';userType=1">张三(用户)</button>
+    <button class="link" @click="phone='13800000001';password='123456';userType=3">超市(商家)</button>
+    <button class="link" @click="phone='13800000002';password='123456';userType=2">飞毛腿(跑腿)</button>
+    <button class="link" @click="phone='13800000000';password='123456';userType=0">管理员</button>
   </div>
   </template>
 

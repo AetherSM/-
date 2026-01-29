@@ -1,17 +1,38 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import http from './services/http'
 const route = useRoute()
 const router = useRouter()
-const tabs = [
-  { path: '/shop', label: '首页' },
-  { path: '/cart', label: '购物车' },
-  { path: '/errands', label: '跑腿' },
-  { path: '/my', label: '我的' }
-]
+
+const userType = ref(Number(localStorage.getItem('userType') || 1))
 const nickname = ref('')
 const loggedIn = ref(false)
+
+const tabs = computed(() => {
+  if (userType.value === 2) { // 跑腿员
+    return [
+      { path: '/errands', label: '任务大厅' },
+      { path: '/errands/runner', label: '我的任务' },
+      { path: '/my', label: '我的' }
+    ]
+  }
+  if (userType.value === 3) { // 商家
+    return [
+      { path: '/merchant/products', label: '商品管理' },
+      { path: '/merchant/orders', label: '订单管理' },
+      { path: '/my', label: '我的' }
+    ]
+  }
+  // 普通用户 (默认为用户界面)
+  return [
+    { path: '/shop', label: '首页' },
+    { path: '/cart', label: '购物车' },
+    { path: '/errands', label: '跑腿' },
+    { path: '/my', label: '我的' }
+  ]
+})
+
 const keyword = ref('')
 const refreshAuth = async () => {
   const token = localStorage.getItem('token')
@@ -24,6 +45,10 @@ const refreshAuth = async () => {
       if (data && data.code === 1 && data.data) {
         nickname.value = String(data.data.nickname || '')
         localStorage.setItem('nickname', nickname.value)
+        if (data.data.userType !== undefined) {
+           userType.value = data.data.userType
+           localStorage.setItem('userType', String(data.data.userType))
+        }
       }
     } catch (e) {}
   }
@@ -57,7 +82,7 @@ const logout = async () => {
     <main class="content">
       <router-view />
     </main>
-    <nav class="tabbar">
+    <nav class="tabbar" v-if="route.path !== '/login'">
       <router-link v-for="t in tabs" :key="t.path" :to="t.path" class="tab" :class="{active: route.path===t.path}">
         <span>{{ t.label }}</span>
       </router-link>

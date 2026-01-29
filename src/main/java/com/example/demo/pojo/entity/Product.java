@@ -32,6 +32,8 @@ public class Product {
     private String mainImage;
     @Schema(description = "详情图JSON")
     private String images; // JSON string
+    @Schema(description = "发货地址")
+    private String shippingAddress;
     @Schema(description = "状态: 0-下架 1-上架")
     private Integer status; // 0-下架 1-上架
     @Schema(description = "创建时间")

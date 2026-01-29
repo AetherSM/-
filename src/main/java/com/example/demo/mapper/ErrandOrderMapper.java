@@ -8,7 +8,8 @@ import java.util.List;
 @Mapper
 public interface ErrandOrderMapper {
     void insert(ErrandOrder order);
-    void updateStatus(@Param("orderNo") String orderNo, @Param("status") Integer status);
+    void updateStatus(@Param("orderNo") String orderNo, @Param("status") Integer status, @Param("runnerId") Long runnerId);
+    
     ErrandOrder findByOrderNo(String orderNo);
     List<ErrandOrder> listByStatus(Integer status);
     List<ErrandOrder> listByUser(@Param("userId") Long userId, @Param("status") Integer status);

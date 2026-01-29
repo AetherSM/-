@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import ErrandList from '../views/ErrandList.vue'
 import CreateErrand from '../views/CreateErrand.vue'
+import RunnerTasks from '../views/RunnerTasks.vue'
+import MerchantProducts from '../views/MerchantProducts.vue'
+import MerchantOrders from '../views/MerchantOrders.vue'
 import My from '../views/My.vue'
-import MyOrders from '../views/MyOrders.vue'
-import Wallet from '../views/Wallet.vue'
 import ProductList from '../views/ProductList.vue'
 import ProductDetail from '../views/ProductDetail.vue'
 import ProductCreate from '../views/ProductCreate.vue'
@@ -17,7 +18,11 @@ const routes = [
   { path: '/', redirect: '/shop' },
   { path: '/login', component: Login },
   { path: '/errands', component: ErrandList, meta: { requiresAuth: true } },
+  { path: '/errands/runner', component: RunnerTasks, meta: { requiresAuth: true } },
   { path: '/errands/create', component: CreateErrand, meta: { requiresAuth: true } },
+  { path: '/merchant/products', component: MerchantProducts, meta: { requiresAuth: true } },
+  { path: '/merchant/product/create', component: ProductCreate, meta: { requiresAuth: true } }, // Reuse for create/edit
+  { path: '/merchant/orders', component: MerchantOrders, meta: { requiresAuth: true } },
   { path: '/my', component: My, meta: { requiresAuth: true } },
   { path: '/orders', redirect: '/my?tab=orders' },
   { path: '/wallet', redirect: '/my?tab=wallet' },

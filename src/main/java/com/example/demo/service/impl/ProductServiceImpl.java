@@ -59,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
         p.setSalesCount(0);
         p.setMainImage(dto.getMainImage());
         p.setImages(writeImages(dto.getImages()));
+        p.setShippingAddress(dto.getShippingAddress());
         p.setStatus(dto.getStatus() == null ? 1 : dto.getStatus());
         p.setCreateTime(LocalDateTime.now());
         p.setUpdateTime(LocalDateTime.now());
@@ -83,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
         existing.setStock(dto.getStock());
         existing.setMainImage(dto.getMainImage());
         existing.setImages(writeImages(dto.getImages()));
+        existing.setShippingAddress(dto.getShippingAddress());
         existing.setStatus(dto.getStatus());
         existing.setUpdateTime(LocalDateTime.now());
         productMapper.update(existing);

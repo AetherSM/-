@@ -34,10 +34,17 @@ public interface ErrandService {
     List<ErrandOrder> listOpenOrders();
     
     /**
-     * 查询我的跑腿订单（我发布的或我接单的）
+     * 查询我的订单
      * @param userId 用户ID
-     * @param status 订单状态（可选）
+     * @param status 状态过滤
      * @return 订单列表
      */
     List<ErrandOrder> listMyOrders(Long userId, Integer status);
+
+    /**
+     * 查询跑腿员接单列表
+     * @param runnerId 跑腿员ID
+     * @return 订单列表
+     */
+    List<ErrandOrder> listRunnerOrders(Long runnerId);
 }

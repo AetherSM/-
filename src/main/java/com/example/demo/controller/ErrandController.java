@@ -84,4 +84,16 @@ public class ErrandController {
             @Parameter(description = "订单状态: 1-待接单,2-已接单,3-配送中,4-已完成,5-已取消", required = false) @RequestParam(required = false) Integer status) {
         return Result.success(errandService.listMyOrders(userId, status));
     }
+
+    /**
+     * 查询跑腿员已接单
+     * @param runnerId 跑腿员ID
+     * @return 订单列表
+     */
+    @Operation(summary = "跑腿任务", description = "查询跑腿员接取的订单")
+    @GetMapping("/runner")
+    public Result<List<ErrandOrder>> listRunnerOrders(
+            @Parameter(description = "跑腿员ID", required = true) @RequestParam Long runnerId) {
+        return Result.success(errandService.listRunnerOrders(runnerId));
+    }
 }

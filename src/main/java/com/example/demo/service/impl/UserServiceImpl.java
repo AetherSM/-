@@ -134,6 +134,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("手机号或密码错误");
         }
 
+        // 验证角色
+        if (loginDTO.getUserType() != null && !loginDTO.getUserType().equals(user.getUserType())) {
+            throw new IllegalArgumentException("请选择正确的角色登录");
+        }
+
         // 4. 生成JWT token
         String token;
         Map<String, Object> claims = new HashMap<>();

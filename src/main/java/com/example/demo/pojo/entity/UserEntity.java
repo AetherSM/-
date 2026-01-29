@@ -47,7 +47,7 @@ public class UserEntity {
     @Schema(description = "信用分")
     private Integer creditScore;
     
-    @Schema(description = "用户类型: 1-普通, 2-跑腿员, 3-商家")
+    @Schema(description = "用户类型: 0-管理员, 1-普通, 2-跑腿员, 3-商家")
     private Integer userType; 
     
     @Schema(description = "状态: 0-禁用, 1-正常")

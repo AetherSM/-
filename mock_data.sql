@@ -3,6 +3,7 @@ USE final_college;
 
 -- 1. 插入用户数据 (密码均为 123456 -> e10adc3949ba59abbe56e057f20f883e)
 INSERT INTO users (user_id, phone, password, nickname, avatar, gender, student_id, school, dormitory, balance, credit_score, user_type, status) VALUES
+(99, '13800000000', 'e10adc3949ba59abbe56e057f20f883e', '管理员', 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin', 1, NULL, '管理中心', '行政楼101', 0.00, 100, 0, 1), -- 管理员
 (1, '13800000001', 'e10adc3949ba59abbe56e057f20f883e', '校园超市', 'https://api.dicebear.com/7.x/avataaars/svg?seed=1', 1, NULL, '清华大学', '商业街101', 10000.00, 100, 3, 1), -- 商家
 (2, '13800000002', 'e10adc3949ba59abbe56e057f20f883e', '飞毛腿跑腿', 'https://api.dicebear.com/7.x/avataaars/svg?seed=2', 1, '2021002', '清华大学', '紫荆公寓1号楼', 500.00, 100, 2, 1), -- 跑腿员
 (3, '13800000003', 'e10adc3949ba59abbe56e057f20f883e', '张三', 'https://api.dicebear.com/7.x/avataaars/svg?seed=3', 1, '2021003', '清华大学', '紫荆公寓2号楼', 1000.00, 100, 1, 1), -- 普通用户

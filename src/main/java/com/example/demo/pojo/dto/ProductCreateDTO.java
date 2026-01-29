@@ -25,6 +25,8 @@ public class ProductCreateDTO {
     private String mainImage;
     @Schema(description = "详情图列表")
     private List<String> images;
+    @Schema(description = "发货地址")
+    private String shippingAddress;
     @Schema(description = "状态: 0-下架, 1-上架")
     private Integer status; // 0/1
 }

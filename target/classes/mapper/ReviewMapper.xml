@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ReviewMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.pojo.entity.Review">
+        <id column="review_id" property="reviewId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_type" property="orderType"/>
+        <result column="reviewer_id" property="reviewerId"/>
+        <result column="reviewer_nickname" property="reviewerNickname"/>
+        <result column="reviewee_id" property="revieweeId"/>
+        <result column="rating" property="rating"/>
+        <result column="content" property="content"/>
+        <result column="images" property="images"/>
+        <result column="is_anonymous" property="isAnonymous"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="reviewId" keyColumn="review_id">
+        insert into reviews(order_id, order_type, reviewer_id, reviewee_id, rating, content, images, is_anonymous, create_time)
+        values(#{orderId}, #{orderType}, #{reviewerId}, #{revieweeId}, #{rating}, #{content}, #{images}, #{isAnonymous}, now())
+    </insert>
+
+    <select id="listByProduct" resultMap="BaseResultMap">
+        select r.*, u.nickname as reviewer_nickname
+        from reviews r
+        join order_items oi on r.order_id = oi.order_id
+        left join users u on r.reviewer_id = u.user_id
+        where oi.product_id = #{productId}
+          and r.order_type = 1
+        order by r.create_time desc
+    </select>
+
+</mapper>

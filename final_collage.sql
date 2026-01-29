@@ -163,6 +163,7 @@ create table products
     sales_count    int       default 0                 null comment '销量',
     main_image     varchar(255)                        null comment '主图',
     images         text                                null comment '商品图片,JSON格式',
+    shipping_address varchar(255)                      null comment '发货地址',
     status         tinyint   default 1                 null comment '状态:0-下架,1-上架',
     create_time    timestamp default CURRENT_TIMESTAMP null,
     update_time    timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
@@ -398,3 +399,23 @@ create table complaints
 
 create index idx_complainant
     on complaints (complainant_id);
+
+-- 评价回复表
+create table review_replies
+(
+    reply_id       bigint auto_increment
+        primary key,
+    review_id      bigint                              not null comment '评价ID',
+    replier_id     bigint                              not null comment '回复人ID',
+    content        text                                not null comment '回复内容',
+    create_time    timestamp default CURRENT_TIMESTAMP null,
+    constraint review_replies_ibfk_1
+        foreign key (review_id) references reviews (review_id),
+    constraint review_replies_ibfk_2
+        foreign key (replier_id) references users (user_id)
+)
+    comment '评价回复表';
+
+create index idx_review
+    on review_replies (review_id);
+

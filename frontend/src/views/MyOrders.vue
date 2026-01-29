@@ -51,6 +51,14 @@ const submitReview = async () => {
     else { ElMessage.error(data?.msg || '评价失败') }
   } catch (e) { ElMessage.error('请求失败') }
 }
+
+const statusMap = {
+  1: '待接单',
+  2: '已接单',
+  3: '配送中',
+  4: '已完成',
+  5: '已取消'
+}
 </script>
 
 <template>
@@ -60,6 +68,7 @@ const submitReview = async () => {
       <label>筛选：</label>
       <select v-model="status" @change="load">
         <option :value="null">全部</option>
+        <option :value="1">进行中</option>
         <option :value="4">历史-已完成</option>
         <option :value="5">历史-已取消</option>
       </select>
@@ -68,12 +77,16 @@ const submitReview = async () => {
     <div v-for="item in orders" :key="item.orderId" class="card">
       <div class="row">
         <div class="title">{{ item.title }}</div>
-        <div class="status">{{ item.orderStatus }}</div>
+        <div class="status" :class="{'done': item.orderStatus===4}">{{ statusMap[item.orderStatus] }}</div>
       </div>
       <div class="desc">{{ item.description }}</div>
+      <div class="row info">
+        <span>赏金: ¥{{ item.reward }}</span>
+        <span v-if="item.pickupCode">取件码: {{ item.pickupCode }}</span>
+      </div>
       <div class="ops">
-        <button class="btn" @click="complete(item.orderNo)">完成订单</button>
-        <button class="btn gray" @click="openReview(item.orderNo)">评价</button>
+        <button v-if="item.orderStatus === 2 || item.orderStatus === 3" class="btn" @click="complete(item.orderNo)">确认完成</button>
+        <button v-if="item.orderStatus === 4" class="btn gray" @click="openReview(item.orderNo)">评价</button>
       </div>
     </div>
     <div v-if="!loading && orders.length===0" class="empty">暂无数据</div>

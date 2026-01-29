@@ -31,14 +31,14 @@ public class ErrandServiceImpl implements ErrandService {
         // 简化逻辑，实际需要校验状态和runnerId
         ErrandOrder order = errandOrderMapper.findByOrderNo(orderNo);
         if (order != null && order.getOrderStatus() == 1) {
-            // 需要更新runner_id，这里简化处理，只更新状态，实际mapper需要支持更新runner_id
-             errandOrderMapper.updateStatus(orderNo, 2); 
+            // 更新状态和runner_id
+             errandOrderMapper.updateStatus(orderNo, 2, runnerId); 
         }
     }
 
     @Override
     public void completeOrder(String orderNo) {
-        errandOrderMapper.updateStatus(orderNo, 4);
+        errandOrderMapper.updateStatus(orderNo, 4, null);
     }
 
     @Override
@@ -49,5 +49,10 @@ public class ErrandServiceImpl implements ErrandService {
     @Override
     public List<ErrandOrder> listMyOrders(Long userId, Integer status) {
         return errandOrderMapper.listByUser(userId, status);
+    }
+
+    @Override
+    public List<ErrandOrder> listRunnerOrders(Long runnerId) {
+        return errandOrderMapper.listByRunner(runnerId);
     }
 }
