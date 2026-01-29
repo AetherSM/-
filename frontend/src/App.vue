@@ -28,6 +28,7 @@ const tabs = computed(() => {
   return [
     { path: '/shop', label: '首页' },
     { path: '/cart', label: '购物车' },
+    { path: '/records', label: '订单记录' },
     { path: '/errands', label: '跑腿' },
     { path: '/my', label: '我的' }
   ]

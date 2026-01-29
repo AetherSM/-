@@ -48,6 +48,8 @@
             <if test="runnerId != null">, runner_id = #{runnerId}, accepted_at = now()</if>
             <if test="status == 4">, completed_at = now()</if>
         where order_no = #{orderNo}
+          <if test="runnerId != null">and order_status = 1 and runner_id is null</if>
+          <if test="status == 4">and order_status in (2,3) and runner_id is not null</if>
     </update>
 
     <select id="findByOrderNo" resultMap="BaseResultMap">

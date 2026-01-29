@@ -28,7 +28,10 @@ onMounted(load)
 const take = async (orderNo) => {
   try {
     const { data } = await http.post('/api/errands/take', null, { params: { orderNo, runnerId: userId } })
-    if (data && data.code === 1) await load()
+    if (data && data.code === 1) {
+      await load()
+      router.push('/errands/runner')
+    }
     else error.value = data?.msg || '接单失败'
   } catch (e) { error.value = '请求失败' }
 }

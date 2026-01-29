@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import http from '../services/http'
 import { ElMessage } from 'element-plus'
 
@@ -7,6 +7,7 @@ const list = ref([])
 const loading = ref(false)
 const error = ref('')
 const runnerId = Number(localStorage.getItem('userId') || 0)
+const activeTab = ref('ongoing') // ongoing, history
 
 const statusMap = {
   1: '待接单',
@@ -15,6 +16,14 @@ const statusMap = {
   4: '已完成',
   5: '已取消'
 }
+
+const displayList = computed(() => {
+  if (activeTab.value === 'ongoing') {
+    return list.value.filter(i => i.orderStatus === 2 || i.orderStatus === 3)
+  } else {
+    return list.value.filter(i => i.orderStatus === 4 || i.orderStatus === 5)
+  }
+})
 
 const load = async () => {
   loading.value = true
@@ -51,17 +60,20 @@ onMounted(load)
 
 <template>
   <div>
-    <h2>我的任务</h2>
+    <div class="tabs">
+      <div class="tab" :class="{active: activeTab==='ongoing'}" @click="activeTab='ongoing'">进行中</div>
+      <div class="tab" :class="{active: activeTab==='history'}" @click="activeTab='history'">跑腿记录</div>
+    </div>
     <div class="toolbar">
       <button class="btn gray" @click="load">刷新列表</button>
     </div>
     
     <div v-if="loading" class="loading">加载中...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else-if="list.length === 0" class="empty">暂无任务</div>
+    <div v-else-if="displayList.length === 0" class="empty">暂无任务</div>
     
     <div v-else class="grid">
-      <div v-for="item in list" :key="item.orderId" class="card">
+      <div v-for="item in displayList" :key="item.orderId" class="card">
         <div class="row">
           <div class="title">{{ item.title }}</div>
           <div class="status" :class="{'done': item.orderStatus===4}">{{ statusMap[item.orderStatus] }}</div>
@@ -88,6 +100,9 @@ onMounted(load)
 </template>
 
 <style scoped>
+.tabs{display:flex;margin-bottom:16px;background:#fff;border-bottom:1px solid #eee}
+.tab{flex:1;text-align:center;padding:12px;cursor:pointer;font-weight:500;color:#666}
+.tab.active{color:#42b883;border-bottom:2px solid #42b883}
 .toolbar{margin-bottom:12px;text-align:right}
 .grid{display:flex;flex-direction:column;gap:12px}
 .card{padding:12px;border:1px solid #eee;border-radius:8px;background:#fff}
@@ -98,9 +113,8 @@ onMounted(load)
 .desc{color:#666;font-size:14px;margin-bottom:8px}
 .info{color:#888;font-size:13px;margin-bottom:8px}
 .addresses{font-size:13px;color:#444;background:#f9f9f9;padding:8px;border-radius:4px;margin-bottom:8px}
+.ops{text-align:right;margin-top:8px}
 .btn{padding:6px 12px;border:none;border-radius:4px;background:#42b883;color:#fff;cursor:pointer}
 .btn.gray{background:#f3f4f6;color:#333}
-.done-tag{color:#999;font-size:13px}
-.loading,.empty,.error{padding:20px;text-align:center;color:#999}
-.error{color:#d33}
+.done-tag{color:#999;font-size:12px;padding:4px 8px;background:#f3f4f6;border-radius:4px}
 </style>

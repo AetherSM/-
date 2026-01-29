@@ -5,6 +5,7 @@ import com.example.demo.pojo.entity.ErrandOrder;
 import com.example.demo.service.ErrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,18 +28,21 @@ public class ErrandServiceImpl implements ErrandService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void takeOrder(String orderNo, Long runnerId) {
-        // 简化逻辑，实际需要校验状态和runnerId
-        ErrandOrder order = errandOrderMapper.findByOrderNo(orderNo);
-        if (order != null && order.getOrderStatus() == 1) {
-            // 更新状态和runner_id
-             errandOrderMapper.updateStatus(orderNo, 2, runnerId); 
+        int updated = errandOrderMapper.updateStatus(orderNo, 2, runnerId);
+        if (updated == 0) {
+            throw new IllegalStateException("接单失败");
         }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void completeOrder(String orderNo) {
-        errandOrderMapper.updateStatus(orderNo, 4, null);
+        int updated = errandOrderMapper.updateStatus(orderNo, 4, null);
+        if (updated == 0) {
+            throw new IllegalStateException("完成失败");
+        }
     }
 
     @Override

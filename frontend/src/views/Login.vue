@@ -20,7 +20,15 @@ const submit = async () => {
       if (data.data.user.userType !== undefined && data.data.user.userType !== null) {
         localStorage.setItem('userType', String(data.data.user.userType))
       }
-      router.push('/errands')
+      
+      const type = data.data.user.userType
+      if (type === 2) {
+        router.push('/errands')
+      } else if (type === 3) {
+        router.push('/merchant/orders')
+      } else {
+        router.push('/shop')
+      }
     } else {
       message.value = data && data.msg ? data.msg : '登录失败'
     }
@@ -42,6 +50,15 @@ const submit = async () => {
     <div class="field">
       <label>密码</label>
       <el-input v-model="password" type="password" placeholder="请输入密码" show-password />
+    </div>
+    <div class="field">
+      <label>角色</label>
+      <el-radio-group v-model="userType">
+        <el-radio :label="1">用户</el-radio>
+        <el-radio :label="2">跑腿</el-radio>
+        <el-radio :label="3">商家</el-radio>
+        <el-radio :label="0">管理员</el-radio>
+      </el-radio-group>
     </div>
     <el-button type="primary" class="btn" :loading="loading" @click="submit">登录</el-button>
     <div class="msg" v-if="message">{{ message }}</div>

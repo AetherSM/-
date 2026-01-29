@@ -3,13 +3,14 @@ import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import http from '../services/http'
 import ProductOrders from './ProductOrders.vue'
+import MyOrders from './MyOrders.vue'
 import Wallet from './Wallet.vue'
 const route = useRoute()
 const router = useRouter()
 const activeTab = ref('orders')
 const syncFromQuery = () => {
   const t = route.query.tab
-  activeTab.value = (t === 'wallet') ? 'wallet' : 'orders'
+  activeTab.value = (t === 'wallet') ? 'wallet' : (t === 'errands' ? 'errands' : 'orders')
 }
 onMounted(syncFromQuery)
 watch(() => route.query.tab, syncFromQuery)
@@ -31,11 +32,13 @@ const logout = async () => {
   <div class="my">
     <div class="tabs">
       <button class="tab" :class="{active: activeTab==='orders'}" @click="switchTab('orders')">订单</button>
+      <button class="tab" :class="{active: activeTab==='errands'}" @click="switchTab('errands')">跑腿订单</button>
       <button class="tab" :class="{active: activeTab==='wallet'}" @click="switchTab('wallet')">钱包充值</button>
       <button class="tab danger" @click="logout">退出登录</button>
     </div>
     <div class="panel">
       <ProductOrders v-if="activeTab==='orders'" />
+      <MyOrders v-else-if="activeTab==='errands'" />
       <Wallet v-else />
     </div>
   </div>
