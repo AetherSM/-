@@ -3,23 +3,22 @@ package com.example.demo.service;
 import com.example.demo.pojo.dto.ProductCreateDTO;
 import com.example.demo.pojo.entity.Product;
 
-import javax.naming.NoPermissionException;
 import java.util.List;
 
-/**
- * 商品业务接口
- */
 public interface ProductService {
-    
+ * 商品业务接口
+
+public interface ProductService {
+
     /**
-     * 搜索商品
+
      * @param categoryId 分类ID
-     * @param keyword 关键词
-     * @param minPrice 最低价
-     * @param maxPrice 最高价
+
+    void updateStatus(Long productId, Integer status, Long sellerId);
+
      * @param status 状态
-     * @param sellerId 卖家ID
      * @param sortBy 排序字段
+
      * @param order 排序方式
      * @return 商品列表
      */

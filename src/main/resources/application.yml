@@ -11,6 +11,15 @@ spring:
         maximum-pool-size: 10
         minimum-idle: 2
         pool-name: SchoolRunHikariPool
+  mail:
+    host: smtp.qq.com
+    username: 2050177096@qq.com
+    password: ldwijnjjuilvcfga
+    properties:
+      mail:
+          smtp:
+              ssl:
+                  enable: true
 
 # MyBatis配置
 mybatis:
