@@ -6,9 +6,7 @@ import com.example.demo.pojo.entity.Product;
 import java.util.List;
 
 public interface ProductService {
- * 商品业务接口
 
-public interface ProductService {
 
     /**
 
